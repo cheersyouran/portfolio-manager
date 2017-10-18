@@ -1,0 +1,6 @@
+ALL_HISTORY=719
+TIME_SPACE=50
+HISTORY=ALL_HISTORY-TIME_SPACE-1
+STOCK_NUM=1
+PATH="~/Desktop/Snowball/quote.csv"
+MODEL1_PATH="./store/model1.ckpt"
