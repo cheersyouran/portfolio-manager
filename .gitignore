@@ -1,1 +1,4 @@
 /.idea/*
+/r1/__pycache__/*
+/r2/__pycache__/*
+/stock_avg.csv
