@@ -7,7 +7,7 @@ import numpy as np
 
 df = pd.read_csv("../../stock_avg.csv")
 Y = df['label']
-X = df.drop(['SecuCode','SecuAbbr','TradingDay','label'], axis=1).reset_index()
+X = df.drop(['SecuCode','SecuAbbr','TradingDay','label'], axis=1)
 
 X -= np.mean(X, axis=0)
 X /= np.std(X, axis=0)

@@ -1,10 +1,15 @@
 import pandas as pd
 from sklearn.externals import joblib
+import base
+# CSV file columns name
 
-df = pd.read_csv("./stock_avg.csv")
+df = base.load_strategy1_data()
 
-q = df.groupby(['TradingDay', 'SecuCode']).apply(lambda x: mlp.predict_proba(x)).reset_index(name='Q')
+mlp = joblib.load('./r2/store/task1-mlp1-accuracy0.736578983101')
+q = df.groupby(['TradingDay', 'SecuCode','SecuAbbr']).apply(lambda x: mlp.predict_proba(x.iloc[:, 3:9])[0,1]).reset_index(name='Q')
 
-print(q)
+sorted_10 = q.set_index(['SecuAbbr']).groupby(['TradingDay'])['Q'].apply(lambda x: x.sort_values(ascending=False).head(10))
 
-mlp = joblib.load('./store/task1-mlp1-accuracs y0.999725963141')
+sorted_10.to_csv("./sorted_10.csv")
+
+print(sorted_10)

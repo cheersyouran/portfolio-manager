@@ -46,7 +46,7 @@ def run():
 
     reward_ratio = env.total_reward_ratio(actions)
     utils.draw_reward_ratio_plot(PATH, reward_ratio)
-    # utils.draw_stocks_price_plot(PATH)
+    # utils.draw_stocks_price_plot(QUTOE_PATH)
 
 
 model = Model1(False)
