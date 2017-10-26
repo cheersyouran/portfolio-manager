@@ -10,19 +10,21 @@ QUTOE_PATH="~/Desktop/Snowball/quote.csv"
 RECORDS_PATH="~/Desktop/Snowball/records.csv"
 NAV_PATH="~/Desktop/Snowball/nav.csv"
 
-
 MODEL1_PATH="./store/model1.ckpt"
 
 def load_records_csv():
-    df = pd.read_csv(RECORDS_PATH, parse_dates=['Update'])
+    df = pd.read_csv(RECORDS_PATH, parse_dates=['Updated'])
+    df["Updated"] = df["Updated"].apply(lambda x: pd.to_datetime(x))
     return df.drop(df.columns[0], axis=1)
 
 def load_quote_csv():
     df = pd.read_csv(QUTOE_PATH, parse_dates=['TradingDay'])
+    df["TradingDay"] = df["TradingDay"].apply(lambda x: pd.to_datetime(x))
     return df.drop(df.columns[0], axis=1)
 
 def load_nav_csv():
-    df = pd.read_csv(NAV_PATH)
+    df = pd.read_csv(NAV_PATH, parse_dates=['NavDate'])
+    df["NavDate"] = df["NavDate"].apply(lambda x: pd.to_datetime(x))
     return df.drop(df.columns[0], axis=1)
 
 
