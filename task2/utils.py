@@ -13,9 +13,7 @@ def top_nav_portcode(n):
     nav = nav.sort_values(by=['Q'], ascending=False)
     names = nav.head(n)['PortCode'].tolist()
 
-    df1 = base.load_records_csv()
-
-    return names,
+    return names
 
 #查看portcode的nav记录
 def check_portcode_detial(portcode):

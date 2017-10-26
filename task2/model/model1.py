@@ -16,18 +16,14 @@ class ddpg():
         actor.add(Activation('relu'))
         actor.add(Dense(16))
         actor.add(Activation('relu'))
-        actor.add(Dense(16))
-        actor.add(Activation('relu'))
         actor.add(Dense(nb_actions))
-        actor.add(Activation('linear'))
+        actor.add(Activation('softmax'))
         print(actor.summary())
 
         action_input = Input(shape=(nb_actions,), name='action_input')
         observation_input = Input(shape=(1,) + Env.observation_space.shape, name='observation_input')
         flattened_observation = Flatten()(observation_input)
         x = merge([action_input, flattened_observation], mode='concat')
-        x = Dense(32)(x)
-        x = Activation('relu')(x)
         x = Dense(32)(x)
         x = Activation('relu')(x)
         x = Dense(32)(x)
@@ -45,10 +41,10 @@ class ddpg():
         self.agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
 
     def fit(self):
-        self.agent.fit(self.env, nb_steps=50000, visualize=True, verbose=1, nb_max_episode_steps=200)
+        self.agent.fit(self.env, nb_steps=1000, visualize=True, verbose=1, nb_max_episode_steps=50)
 
     def save_weights(self):
         self.agent.save_weights('./store/ddpg_{}_weights.h5f'.format("porfolio"), overwrite=True)
 
     def test(self):
-        self.agent.test(self.env, nb_episodes=5, visualize=True, nb_max_episode_steps=200)
+        self.agent.test(self.env, nb_episodes=5, visualize=True, nb_max_episode_steps=50)

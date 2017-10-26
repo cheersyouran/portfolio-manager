@@ -2,10 +2,10 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.neural_network import MLPClassifier
 from sklearn.externals import joblib
-import pandas as pd
 import numpy as np
+import base
 
-df = pd.read_csv("../../stock_avg.csv")
+df = base.load_strategy1_data()
 Y = df['label']
 X = df.drop(['SecuCode','SecuAbbr','TradingDay','label'], axis=1)
 
