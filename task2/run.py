@@ -5,4 +5,5 @@ env = env()
 ddpg = model1.ddpg(env)
 ddpg.fit()
 
-ddpg.test()
+history = ddpg.test()
+print(history)

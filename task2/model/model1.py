@@ -41,10 +41,12 @@ class ddpg():
         self.agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
 
     def fit(self):
-        self.agent.fit(self.env, nb_steps=1000, visualize=True, verbose=1, nb_max_episode_steps=50)
+        history = self.agent.fit(self.env, nb_steps=1000, visualize=True, verbose=1, nb_max_episode_steps=50)
+        return history
 
     def save_weights(self):
         self.agent.save_weights('./store/ddpg_{}_weights.h5f'.format("porfolio"), overwrite=True)
 
     def test(self):
-        self.agent.test(self.env, nb_episodes=5, visualize=True, nb_max_episode_steps=50)
+        history = self.agent.test(self.env, nb_episodes=5, visualize=True, nb_max_episode_steps=50)
+        return history

@@ -11,6 +11,7 @@ column = ['SecuCode', 'SecuAbbr', 'TradingDay',
           'TurnoverVolume', 'TurnoverValue']
 ex_column = []
 
+#计算n日均价格
 def with_nday_avg(df, n_day):
 
     # gb = df.groupby("SecuAbbr")
@@ -26,7 +27,7 @@ def with_nday_avg(df, n_day):
     ex_column.append(col)
     return merged
 
-
+#计算n日回报率
 def with_nday_reward_ratio(df, n_day):
     col = str(n_day)+'_reward_ratio'
     ratio = df.set_index(['SecuCode','TradingDay']).groupby('SecuCode')['Close'] \
@@ -37,6 +38,7 @@ def with_nday_reward_ratio(df, n_day):
     ex_column.append(col)
     return merged
 
+#用n日的回报率和threshold做0or1监督标注
 def label_by_reward_ratio(df, n_day, threshold = 0):
 
     col = str(n_day)+'_reward_ratio'
@@ -47,6 +49,7 @@ def label_by_reward_ratio(df, n_day, threshold = 0):
     # ex_column.append(col)
     return df
 
+#计算（n日均价格 - 当日收盘价）
 def with_nday_ratio_difference(df, n_day):
     col = str(n_day) + '_avg_diff_ratio'
     avg = str(n_day) + '_avg'
@@ -55,7 +58,7 @@ def with_nday_ratio_difference(df, n_day):
     # ex_column.append(col)
     return df
 
-
+#生成数据
 def process_data():
     df = base.load_quote_csv()
     df = with_nday_avg(df, 2)
