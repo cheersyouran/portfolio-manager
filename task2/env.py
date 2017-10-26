@@ -5,7 +5,7 @@ from rl.core import Env
 
 class env(Env):
     def __init__(self):
-        self.portcodes = ['ZH000199']
+        self.portcodes = ['ZH000199','ZH000283']
         self.port_num = len(self.portcodes)
         self.s1 = base.load_strategy1_data()
         self.nav = base.load_nav_csv()
@@ -47,7 +47,7 @@ class env(Env):
         ratio = (r_-r)/r
         # rewards = np.insert(rewards, 0, 1)
         self.count = self.count + 1
-        return sum(ratio*action[1:])
+        return (sum(ratio*action[1:]) - 0.01)*1000
 
     def whether_done(self):
         return False

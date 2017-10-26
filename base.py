@@ -8,6 +8,7 @@ STOCK_NUM=1
 QUTOE_PATH="~/Desktop/Snowball/quote.csv"
 RECORDS_PATH="~/Desktop/Snowball/records.csv"
 NAV_PATH="~/Desktop/Snowball/nav.csv"
+INDUTRY_PATH='~/Desktop/Snowball/industry.csv'
 
 MODEL1_PATH="./store/model1.ckpt"
 
@@ -15,19 +16,24 @@ def load_records_csv():
     print('load records data....')
     df = pd.read_csv(RECORDS_PATH, parse_dates=['Updated'])
     df["Updated"] = df["Updated"].apply(lambda x: pd.to_datetime(x))
-    return df.drop(df.columns[0], axis=1)
+    return df
 
 def load_quote_csv():
     print('load quote data....')
     df = pd.read_csv(QUTOE_PATH, parse_dates=['TradingDay'])
     df["TradingDay"] = df["TradingDay"].apply(lambda x: pd.to_datetime(x))
-    return df.drop(df.columns[0], axis=1)
+    return df
 
 def load_nav_csv():
     print('load nav data....')
     df = pd.read_csv(NAV_PATH, parse_dates=['NavDate'])
     df["NavDate"] = df["NavDate"].apply(lambda x: pd.to_datetime(x))
-    return df.drop(df.columns[0], axis=1)
+    return df
+
+def load_industry_csv():
+    print('load nav data....')
+    df = pd.read_csv(INDUTRY_PATH)
+    return df
 
 
 # ['SecuCode', 'SecuAbbr', 'TradingDay', '2_avg_diff_ratio',

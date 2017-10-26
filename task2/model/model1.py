@@ -5,8 +5,9 @@ from keras.optimizers import Adam
 from rl.agents import DDPGAgent
 from rl.memory import SequentialMemory
 from rl.random import OrnsteinUhlenbeckProcess
+from task2.model.processor import ShowActionProcessor
 
-class ddpg():
+class DDPG():
     def __init__(self, Env):
         self.env = Env
         nb_actions = self.env.action_space.shape[0]
@@ -38,15 +39,16 @@ class ddpg():
         self.agent = DDPGAgent(nb_actions=nb_actions, actor=actor, critic=critic, critic_action_input=action_input,
                           memory=memory, nb_steps_warmup_critic=100, nb_steps_warmup_actor=100,
                           random_process=random_process, gamma=.99, target_model_update=1e-3)
+        self.agent.processor = ShowActionProcessor(self.agent)
         self.agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
 
     def fit(self):
-        history = self.agent.fit(self.env, nb_steps=1000, visualize=True, verbose=1, nb_max_episode_steps=50)
+        history = self.agent.fit(self.env, nb_steps=10000, visualize=False, verbose=1, nb_max_episode_steps=50)
         return history
 
     def save_weights(self):
         self.agent.save_weights('./store/ddpg_{}_weights.h5f'.format("porfolio"), overwrite=True)
 
     def test(self):
-        history = self.agent.test(self.env, nb_episodes=5, visualize=True, nb_max_episode_steps=50)
+        history = self.agent.test(self.env, nb_episodes=1, visualize=False, nb_max_episode_steps=50)
         return history
