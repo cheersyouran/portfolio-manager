@@ -1,5 +1,3 @@
-import numpy as np
-
 from rl.core import Processor
 
 class ShowActionProcessor(Processor):
