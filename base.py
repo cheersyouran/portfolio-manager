@@ -10,6 +10,7 @@ RECORDS_PATH="~/Desktop/Snowball/records.csv"
 NAV_PATH="~/Desktop/Snowball/nav.csv"
 INDUTRY_PATH='~/Desktop/Snowball/industry.csv'
 
+S1_PATH = '/Users/Youran/Projects/PortfolioManagement/stock_avg.csv'
 MODEL1_PATH="./store/model1.ckpt"
 
 def load_records_csv():
@@ -41,4 +42,4 @@ def load_industry_csv():
 # '6_avg_diff_ratio', '7_avg_diff_ratio', 'label']
 def load_strategy1_data():
     print('load strategy1 data....')
-    return pd.read_csv("/Users/Youran/Projects/PortfolioManagement/stock_avg.csv", parse_dates=['TradingDay'])
+    return pd.read_csv(S1_PATH, parse_dates=['TradingDay'])
