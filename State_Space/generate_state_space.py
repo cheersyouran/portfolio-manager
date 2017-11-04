@@ -32,4 +32,4 @@ dicts = {'Bank': rolling_mean_bank, 'TradingDay': TradingDay,
 rolling_data = pd.DataFrame(data=dicts, columns=['TradingDay', 'Bank', 'Iron', 'Computer', 'Market'])
 rolling_data.index = np.arange(len(TradingDay))
 
-rolling_data.to_csv('rolling_data.csv')
+rolling_data.to_csv('rolling_data.csv', index=False)
