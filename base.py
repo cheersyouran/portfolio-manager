@@ -39,6 +39,7 @@ def load_industry_csv():
     return df
 
 def load_states_csv():
+    print('load state space data....')
     df = pd.read_csv(STATE_SPACE)
     return df
 

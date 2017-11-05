@@ -38,13 +38,13 @@ class DDPG():
         # random_process = OrnsteinUhlenbeckProcess(size=nb_actions, theta=.15, mu=0., sigma=.3)
         random_process = None
         self.agent = DDPGAgent(nb_actions=nb_actions, actor=actor, critic=critic, critic_action_input=action_input,
-                          memory=memory, nb_steps_warmup_critic=100, nb_steps_warmup_actor=32,
-                          random_process=random_process, gamma=0, target_model_update=1e-3)
-        self.agent.processor = ShowActionProcessor(self.agent)
+                          memory=memory, nb_steps_warmup_critic=32, nb_steps_warmup_actor=32,
+                          random_process=random_process, gamma=0, target_model_update=1e-2)
+        self.agent.processor = ShowActionProcessor(self.agent, self.env)
         self.agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
 
     def fit(self):
-        history = self.agent.fit(self.env, nb_steps=200, visualize=False, verbose=1, nb_max_episode_steps=10)
+        history = self.agent.fit(self.env, nb_steps=2000, visualize=False, verbose=1, nb_max_episode_steps=10)
         return history
 
     def save_weights(self):

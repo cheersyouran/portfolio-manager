@@ -15,6 +15,7 @@ class env(Env):
         self.count = 1
         self.action_space = np.zeros(self.port_num + 1, )
         self.observation_space = np.zeros(3,)
+        self.current_reward = 0
 
         print("################## INIT ENV ####################")
         print("PortCodes: ", self.portcodes )
@@ -52,11 +53,19 @@ class env(Env):
         date = self.s1.iloc[self.count-1, 0]
         r_ = self.nav[(self.nav['NavDate'] == date_) & (self.nav['PortCode'].isin(self.portcodes))]['Nav'].values
         r = self.nav[(self.nav['NavDate'] == date) & (self.nav['PortCode'].isin(self.portcodes))]['Nav'].values
+
         ratio = (r_-r)/r
-        # rewards = np.insert(rewards, 0, 1)
+        ratio = np.insert(ratio, 0, 0)
+        reward = sum(ratio*action[:])
+
+        if(reward > np.max(ratio)*0.95):
+            # reward = reward/np.max(ratio)
+            reward = 1
+        else:
+            reward = -1
+        self.current_reward = reward
         self.count = self.count + 1
-        reward = sum(ratio*action[1:])
-        return (reward - 0.001)*10000
+        return reward
 
     def whether_done(self):
         return False
