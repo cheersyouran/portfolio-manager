@@ -1,5 +1,5 @@
 from keras.models import Sequential, Model
-from keras.layers import Dense, Activation, Flatten, Input, merge
+from keras.layers import Dense, Activation, Flatten, Input, merge, concatenate
 from keras.optimizers import Adam
 
 from rl.agents import DDPGAgent
@@ -24,14 +24,14 @@ class DDPG():
         action_input = Input(shape=(nb_actions,), name='action_input')
         observation_input = Input(shape=(1,) + Env.observation_space.shape, name='observation_input')
         flattened_observation = Flatten()(observation_input)
-        x = merge([action_input, flattened_observation], mode='concat')
+        x = concatenate([action_input, flattened_observation], name = 'concatenate')
         x = Dense(32)(x)
         x = Activation('relu')(x)
         x = Dense(32)(x)
         x = Activation('relu')(x)
         x = Dense(1)(x)
         x = Activation('linear')(x)
-        critic = Model(input=[action_input, observation_input], output=x)
+        critic = Model(inputs=[action_input, observation_input], outputs=x)
         # print(critic.summary())
 
         memory = SequentialMemory(limit=100000, window_length=1)
