@@ -48,11 +48,11 @@ class DDPG():
         return history
 
     def save_weights(self):
-        self.agent.save_weights('./store/ddpg_{}_weights.h5f'.format("porfolio"), overwrite=True)
+        self.agent.save_weights('./store/ddpg_{}_weights2.h5f'.format("porfolio"), overwrite=True)
 
     def test(self):
         history = self.agent.test(self.env, nb_episodes=1, visualize=False, nb_max_episode_steps=10)
         return history
 
     def load_weights(self):
-        self.agent.load_weights('./store/ddpg_{}_weights.h5f'.format("porfolio"))
+        self.agent.load_weights('./store/ddpg_{}_weights2.h5f'.format("porfolio"))
