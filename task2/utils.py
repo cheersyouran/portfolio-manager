@@ -33,5 +33,11 @@ def check_portcodes_detial(portcodes):
     return tmp1
 
 # codes = top_nav_portcode(3)
+
 df = check_portcodes_detial(['ZH000199', 'ZH000283'])
+# print(df)
+
+# df = base.load_records_csv()
+
 print(df)
+

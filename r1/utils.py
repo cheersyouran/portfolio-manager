@@ -1,19 +1,24 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import base
 
-from r1 import config
-
-TIME_SPACE = config.TIME_SPACE
-STOCK_NUM = config.STOCK_NUM
-HISTORY = config.HISTORY
-ALL_HISTORY = config.ALL_HISTORY
-PATH = config.PATH
+TIME_SPACE = base.TIME_SPACE
+STOCK_NUM = base.STOCK_NUM
+HISTORY = base.HISTORY
+ALL_HISTORY = base.ALL_HISTORY
 
 # STOCKS=np.array(['东南网架','汉王科技'])
 # STOCKS_PY=np.array(['DNWJ','HWKJ'])
-STOCKS=np.array(['汉王科技'])
-STOCKS_PY=np.array(['HWKJ'])
+# STOCKS=np.array(['南都电源' ,'棕榈股份' ,'以岭药业' ,'国元证券' ,'广深铁路' ,'吉林敖东' ,'光大证券' ,'安琪酵母', '江中药业' ,'光大银行'
+#  ,'南山铝业', '江西铜业' '盐湖股份' ,'浦发银行' ,'中国重工'])
+
+# STOCKS=np.array(['招商银行','中信证券','国元证券','平安银行','东方财富','吉林敖东','兴业银行','光大证券','光大银行', '亚泰集团'
+#  ,'交通银行' ,'辽宁成大' ,'华泰证券' ,'中国银行'])
+
+STOCKS=np.array(['南都电源' ,'棕榈股份' ,'以岭药业' ,'国元证券' ,'交通银行' ,'辽宁成大' ,'华泰证券' ,'中国银行'])
+
+# STOCKS_PY=np.array(['HWKJ'])
 
 def load_data(path):
     # 'SecuCode','SecuAbbr','TradingDay','Close','High','Low','Avg','ChangePCT','TurnoverVolume','TurnoverValue'
@@ -39,7 +44,7 @@ def draw_stocks_price_plot(path):
 
     plt.xlabel('date')
     plt.ylabel('price')
-    plt.legend(STOCKS_PY,loc='upper right')
+    # plt.legend(STOCKS_PY,loc='upper right')
     # plt.tick_params(axis='both', which='major', labelsize=5)
     plt.xticks(fontsize=8, rotation=45)
     plt.show()
@@ -59,3 +64,5 @@ def draw_reward_ratio_plot(path, r):
     plt.ylabel('long-time-ratio')
     plt.xticks(fontsize=8, rotation=45)
     plt.show()
+
+draw_stocks_price_plot(base.QUTOE_PATH)

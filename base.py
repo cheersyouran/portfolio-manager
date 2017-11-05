@@ -10,8 +10,10 @@ RECORDS_PATH="~/Desktop/Snowball/records.csv"
 NAV_PATH="~/Desktop/Snowball/nav.csv"
 INDUTRY_PATH='~/Desktop/Snowball/industry.csv'
 
-S1_PATH = '/Users/Youran/Projects/PortfolioManagement/stock_avg.csv'
+S1_PATH = '~/Projects/PortfolioManagement/stock_avg.csv'
 MODEL1_PATH="./store/model1.ckpt"
+
+STATE_SPACE='~/Projects/PortfolioManagement/State_Space/rolling_data.csv'
 
 def load_records_csv():
     print('load records data....')
@@ -36,6 +38,9 @@ def load_industry_csv():
     df = pd.read_csv(INDUTRY_PATH)
     return df
 
+def load_states_csv():
+    df = pd.read_csv(STATE_SPACE)
+    return df
 
 # ['SecuCode', 'SecuAbbr', 'TradingDay', '2_avg_diff_ratio',
 # '3_avg_diff_ratio', '4_avg_diff_ratio', '5_avg_diff_ratio',

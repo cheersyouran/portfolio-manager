@@ -5,10 +5,6 @@ env = env()
 ddpg = model1.DDPG(env)
 train_history = ddpg.fit()
 
-print(train_history)
-
 history = ddpg.test()
-
-print(history)
 
 ddpg.save_weights()
