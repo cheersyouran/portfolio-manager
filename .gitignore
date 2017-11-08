@@ -3,3 +3,5 @@
 /stock_avg.csv
 /sorted_10.csv
 task2/model/test2.py
+/data/*
+/alpha-strategy.py

@@ -5,15 +5,16 @@ TIME_SPACE=50
 HISTORY=ALL_HISTORY-TIME_SPACE-1
 STOCK_NUM=1
 
-QUTOE_PATH="~/Desktop/Snowball/quote.csv"
-RECORDS_PATH="~/Desktop/Snowball/records.csv"
-NAV_PATH="~/Desktop/Snowball/nav.csv"
-INDUTRY_PATH='~/Desktop/Snowball/industry.csv'
+PROJ_PATH='~/Projects/PortfolioManagement'
 
-S1_PATH = '~/Projects/PortfolioManagement/stock_avg.csv'
-MODEL1_PATH="./store/model1.ckpt"
+QUTOE_PATH=PROJ_PATH+"/data/quote.csv"
+RECORDS_PATH=PROJ_PATH+"/data/records.csv"
+NAV_PATH=PROJ_PATH+"/data/nav.csv"
+INDUTRY_PATH=PROJ_PATH+'/data/industry.csv'
 
-STATE_SPACE='~/Projects/PortfolioManagement/State_Space/rolling_data.csv'
+S1_PATH=PROJ_PATH+'/stock_avg.csv'
+MODEL1_PATH=PROJ_PATH+"/store/model1.ckpt"
+STATE_SPACE=PROJ_PATH+'/State_Space/rolling_data1.csv'
 
 def load_records_csv():
     print('load records data....')

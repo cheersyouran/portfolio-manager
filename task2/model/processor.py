@@ -10,7 +10,7 @@ class ShowActionProcessor(Processor):
     def process_action(self, action):
         if( self.agent.training == False):
             if(self.step == self.agent.step):
-                print('Step: ', self.agent.step, action, "Reward:" , self.env.current_reward)
+                print('Step:', self.agent.step,"Action:",  action, "Reward:" , self.env.current_reward)
                 self.step = self.step + 1
 
         return action
