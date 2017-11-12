@@ -14,7 +14,7 @@ INDUTRY_PATH=PROJ_PATH+'/data/industry.csv'
 
 S1_PATH=PROJ_PATH+'/stock_avg.csv'
 MODEL1_PATH=PROJ_PATH+"/store/model1.ckpt"
-STATE_SPACE=PROJ_PATH+'/State_Space/rolling_data1.csv'
+STATE_SPACE=PROJ_PATH+'/State_Space/rolling_data2.csv'
 
 def load_records_csv():
     print('load records data....')

@@ -4,17 +4,21 @@ from rl.core import Env
 from sklearn import preprocessing
 
 class env(Env):
-    def __init__(self):
-        self.portcodes = ['ZH000199', 'ZH000283']
+    def __init__(self, train_window, test_window):
+        self.portcodes = ['ZH010630', 'ZH016987']
         self.port_num = len(self.portcodes)
         s1 = base.load_states_csv()
-        # s1.iloc[:, 1:] = preprocessing.scale(s1.iloc[:, 1:])
-        self.s1 = s1.drop(s1.index[:18])
+        s1.iloc[:, 1:] = preprocessing.scale(s1.iloc[:, 1:])
+        self.s1 = s1.drop(s1.index[:40])
         self.nav = base.load_nav_csv()
         self.count = 1
         self.action_space = np.zeros(self.port_num + 1, )
-        self.observation_space = np.zeros(3,)
+        self.observation_space = np.zeros(2,)
         self.current_reward = 0
+        self.phase = 'Train'
+        self.train_window = train_window
+        self.test_window = test_window
+        self.done = False
 
         print("################## INIT ENV ####################")
         print("PortCodes: ", self.portcodes )
@@ -38,13 +42,24 @@ class env(Env):
 
     def reset(self):
         self.count = 1
+        self.done = False
         return self.get_observation()
 
     def __del__(self):
         pass
 
     def get_observation(self):
-        obs = self.s1.iloc[self.count, 2:]
+        if (self.phase == 'Train'):
+            return self.get_train_obervation()
+        else:
+            return self.get_test_obervation()
+
+    def get_train_obervation(self):
+        obs = self.s1.iloc[self.count, 1:]
+        return obs
+
+    def get_test_obervation(self):
+        obs = self.s1.iloc[self.test_window + self.count, 1:]
         return obs
 
     def get_reward_for_dqn(self,action):
@@ -58,15 +73,15 @@ class env(Env):
         reward = ratio[action]
 
         if (reward > np.max(ratio) * 0.9):
-            reward = 10 * reward / np.max(ratio)
-            # reward = 10
+            # reward = 10 * reward / np.max(ratio)
+            reward = 10
         else:
             reward = -10
         self.current_reward = reward
         self.count = self.count + 1
         return reward
 
-    def get_reward(self, action):
+    def get_reward_for_ddpg(self, action):
         date_ = self.s1.iloc[self.count, 0]
         date = self.s1.iloc[self.count-1, 0]
         r_ = self.nav[(self.nav['NavDate'] == date_) & (self.nav['PortCode'].isin(self.portcodes))]['Nav'].values
@@ -86,8 +101,14 @@ class env(Env):
         return reward
 
     def whether_done(self):
-        return False
-
+        if (self.phase == 'Train'):
+            if(self.count == self.train_window + 1):
+                return True
+        elif(self.phase == 'Test'):
+            if(self.count == self.test_window + 1):
+                return True
+        else:
+            return False
 
 
 
