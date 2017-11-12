@@ -1,11 +1,11 @@
+from keras.layers import Dense, Activation, Flatten, Input, concatenate
 from keras.models import Sequential, Model
-from keras.layers import Dense, Activation, Flatten, Input, merge, concatenate
 from keras.optimizers import Adam
-
 from rl.agents import DDPGAgent
 from rl.memory import SequentialMemory
-from rl.random import OrnsteinUhlenbeckProcess
-from task2.model.processor import ShowActionProcessor
+
+from task2.Processor.processor import ShowActionProcessor
+
 
 class DDPG():
     def __init__(self, Env):

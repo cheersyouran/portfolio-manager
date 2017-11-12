@@ -7,7 +7,7 @@ from keras.optimizers import Adam
 from rl.agents.dqn import DQNAgent
 from rl.policy import BoltzmannQPolicy
 from rl.memory import SequentialMemory
-from task2.model.processor import ShowActionProcessor
+from task2.Processor.processor import ShowActionProcessor
 
 class dqn():
     def __init__(self, Env):
@@ -16,6 +16,8 @@ class dqn():
 
         model = Sequential()
         model.add(Flatten(input_shape=(1,) + self.env.observation_space.shape))
+        model.add(Dense(64))
+        model.add(Activation('relu'))
         model.add(Dense(64))
         model.add(Activation('relu'))
         model.add(Dense(64))

@@ -72,7 +72,7 @@ class env(Env):
         ratio = np.insert(ratio, 0, 0)
         reward = ratio[action]
 
-        if (reward > np.max(ratio) * 0.9):
+        if (reward >= np.max(ratio) * 0.9):
             # reward = 10 * reward / np.max(ratio)
             reward = 10
         else:
