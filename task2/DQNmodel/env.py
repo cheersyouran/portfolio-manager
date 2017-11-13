@@ -5,7 +5,7 @@ from sklearn import preprocessing
 
 class env(Env):
     def __init__(self, train_window, test_window):
-        self.portcodes = ['ZH010630', 'ZH016987']
+        self.portcodes = ['ZH010630']
         self.port_num = len(self.portcodes)
         s1 = base.load_states_csv()
         s1.iloc[:, 1:] = preprocessing.scale(s1.iloc[:, 1:])
@@ -38,7 +38,10 @@ class env(Env):
         pass
 
     def step(self, action):
-        return self.get_observation(), self.get_reward_for_dqn(action), self.whether_done(),  {}
+        obs = self.get_observation()
+        r = self.get_reward_for_dqn(action)
+        self.count = self.count + 1
+        return obs, r, self.whether_done(),  {}
 
     def reset(self):
         self.count = 1
@@ -78,7 +81,6 @@ class env(Env):
         else:
             reward = -10
         self.current_reward = reward
-        self.count = self.count + 1
         return reward
 
     def get_reward_for_ddpg(self, action):
@@ -91,7 +93,7 @@ class env(Env):
         ratio = np.insert(ratio, 0, 0)
         reward = sum(ratio*action[:])
 
-        if(reward > np.max(ratio)*0.9):
+        if(reward >= np.max(ratio)*0.9):
             # reward = 10 * reward/np.max(ratio)
             reward = 10
         else:
@@ -102,10 +104,10 @@ class env(Env):
 
     def whether_done(self):
         if (self.phase == 'Train'):
-            if(self.count == self.train_window + 1):
+            if(self.count == self.train_window):
                 return True
         elif(self.phase == 'Test'):
-            if(self.count == self.test_window + 1):
+            if(self.count == self.test_window):
                 return True
         else:
             return False

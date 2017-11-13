@@ -65,3 +65,13 @@ def generate_states(industry_name, feature):
         return ave(industry_name, feature[0], feature[1])
     else:
         return None
+
+if __name__ == '__main__':
+
+    ind = search_industies('ZH010630')
+    ps = find_similar_ports('ZH010630')
+    s = generate_states('银行', [2, 5])
+
+    print(ind)
+    print(ps)
+    print(s)

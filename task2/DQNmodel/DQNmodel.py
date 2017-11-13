@@ -24,8 +24,6 @@ class dqn():
         model.add(Activation('relu'))
         model.add(Dense(64))
         model.add(Activation('relu'))
-        model.add(Dense(64))
-        model.add(Activation('relu'))
         model.add(Dense(nb_actions))
         model.add(Activation('linear'))
 

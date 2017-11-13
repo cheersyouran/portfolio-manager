@@ -1,6 +1,6 @@
 from task2.QLearningModel.env import Env
 from task2.QLearningModel.QLearningModel import QLearningModel
-train_window=50
+train_window=500
 test_window=10
 env = Env(train_window, test_window)
 RL = QLearningModel(actions=list(range(len(env.portcodes)+1)))
@@ -28,6 +28,7 @@ print('#######################################################################')
 
 env.phase = 'Test'
 observation = env.reset()
+rewards = 0
 while True:
     a = RL.choose_action(str(obs))
     obs_, r, done = env.step(a)
@@ -36,5 +37,5 @@ while True:
     print('Action: ', a, 'Reward: ', r)
     if done:
         break
-ratio = rewards / test_window * 10
+ratio = rewards / (test_window * 10)
 print('Rewards: ', rewards, 'Accuracy: ',ratio)

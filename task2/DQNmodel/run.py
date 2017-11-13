@@ -1,7 +1,7 @@
 from task2.DQNmodel import DQNmodel
 from task2.DQNmodel.env import env
 
-train_window = 30
+train_window = 500
 test_window = 10
 
 env = env(train_window, test_window)
