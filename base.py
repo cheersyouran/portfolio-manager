@@ -12,7 +12,7 @@ RECORDS_PATH=PROJ_PATH+"/data/records.csv"
 NAV_PATH=PROJ_PATH+"/data/nav.csv"
 INDUTRY_PATH=PROJ_PATH+'/data/industry.csv'
 INDUSTRYQUOTE_PATH=PROJ_PATH+'/data/industry_quote.csv'
-IR_PATH=PROJ_PATH+'/data/IR_rank.csv'
+IR_WEEK_PATH=PROJ_PATH+'/data/IR_rank_week.csv'
 
 S1_PATH=PROJ_PATH+'/stock_avg.csv'
 MODEL1_PATH=PROJ_PATH+"/store/model1.ckpt"
@@ -37,7 +37,7 @@ def load_nav_csv():
     return df
 
 def load_industry_csv():
-    print('load nav data....')
+    print('load industry data....')
     df = pd.read_csv(INDUTRY_PATH)
     return df
 
@@ -49,9 +49,9 @@ def load_industryquote_csv():
     df.columns = ['TradingDay'] + ind
     return df
 
-def load_ir_csv():
+def load_irweek_csv():
     print('load information ratio rank data...')
-    df = pd.read_csv(IR_PATH, index_col='PortCode')
+    df = pd.read_csv(IR_WEEK_PATH, index_col='PortCode')
     return df
 
 def load_states_csv():

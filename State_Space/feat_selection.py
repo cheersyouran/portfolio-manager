@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.metrics import f1_score
 
 
-IR_rank = base.load_ir_csv()
+IR_rank = base.load_irweek_csv()
 quote = base.load_quote_csv()
 industry = base.load_industry_csv()
 records = base.load_records_csv()
