@@ -78,7 +78,7 @@ def find_similar_ports_byFreq(port, thresh=0.5, output=5):
     records_copy.columns = ['PortCode', 'Updated', 'Industry', 'StockName','PrevWeight', 'TargetWeight']
     records_copy = pd.DataFrame(records_copy.groupby(['PortCode', 'Updated']).apply(lambda x: 
                                                                 pd.Series(x.Industry.unique()))).reset_index()
-    records_copy.columns = ['PortCode', 'Updated', 'level_2', 'Industry']
+    records_copy.columns = np.insert(records_copy.columns.values[:-1], len(records_copy.columns)-1, 'Industry')
     port_num_test = pd.DataFrame(records_copy.groupby(['PortCode', 'Industry']).apply(lambda x: 
                                                                                     len(x))).reset_index()
     col = port_num.columns
