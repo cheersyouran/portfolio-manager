@@ -67,11 +67,15 @@ def generate_dummy_table():
 
 # find similar portfolios using frequency table.
 # Demo:
-#   find_similar_ports_byFreq('ZH000199', output=4)
-# return 4 portcodes that are most similar to ZH000199
+#   find_similar_ports_byFreq('ZH000199', ['ZH000283', 'ZH877294', 'ZH395487', 'ZH015838'], output=4)
+# from the portcodes list, return 4 portcodes that are most similar to ZH000199
 
-def find_similar_ports_byFreq(port, thresh=0.5, output=5):
+def find_similar_ports_byFreq(port, port_list=None, thresh=0.5, output=5):
     port_num = generate_freq_table()
+    if port_list is not None:
+        ind = np.array(port_list)
+        ind = ind[pd.Series(ind).isin(port_num.index)]
+        port_num = port_num.loc[ind]
     dicts = industry.set_index(['SecuCode']).to_dict()['FirstIndustryName']
     records_copy = records[records.PortCode==port].copy()
     records_copy.SecuCode = records_copy.SecuCode.map(dicts)
