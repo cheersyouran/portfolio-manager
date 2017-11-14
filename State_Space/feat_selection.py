@@ -196,3 +196,15 @@ def generate_states(industry_name, params):
     output.index.names = ['TradingDay']
     output.to_csv(name+'.csv')
     return output
+
+
+
+# Demo:
+#   periods, count = get_active_periods('ZH000199')
+
+def get_active_periods(port):
+    periods = records[records.PortCode == port].Updated.apply(lambda x: str(x)[:10])
+    periods = pd.DataFrame(periods.unique())
+    periods.columns = [port + '_Periods']
+    count = len(periods)
+    return periods, count
