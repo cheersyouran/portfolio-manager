@@ -65,7 +65,12 @@ def generate_dummy_table():
 
 
 
-def find_similar_ports_byFreq(port, thresh=0.5):
+# find similar portfolios using frequency table.
+# Demo:
+#   find_similar_ports_byFreq('ZH000199', output=4)
+# return 4 portcodes that are most similar to ZH000199
+
+def find_similar_ports_byFreq(port, thresh=0.5, output=5):
     port_num = generate_freq_table()
     dicts = industry.set_index(['SecuCode']).to_dict()['FirstIndustryName']
     records_copy = records[records.PortCode==port].copy()
@@ -91,11 +96,16 @@ def find_similar_ports_byFreq(port, thresh=0.5):
     ports_scores.columns = ['PortCode', 'Score']
     ports_scores.sort_values(['Score'], inplace=True)
     ports_selected = ports_scores[ports_scores.Score>=thresh].loc[ports_scores.Score<0.98]
-    return ports_selected.PortCode.values[::-1][:5]
+    return ports_selected.PortCode.values[::-1][:output]
 
 
 
-def find_similar_ports_byRegion(port, thresh=0.5):
+# find similar portfolios using dummy table.
+# Demo:
+#   find_similar_ports_byRegion('ZH000199', output=4)
+# return 4 portcodes that are most similar to ZH000199
+
+def find_similar_ports_byRegion(port, thresh=0.5, output=5):
     Port_Region = generate_dummy_table()
     dicts = industry.set_index(['SecuCode']).to_dict()['FirstIndustryName']
     records_copy = records[records.PortCode==port].copy()
@@ -110,13 +120,16 @@ def find_similar_ports_byRegion(port, thresh=0.5):
     ports_scores.columns = ['PortCode', 'Score']
     ports_scores.sort_values(['Score'], inplace=True)
     ports_selected = ports_scores[ports_scores.Score>=thresh].loc[ports_scores.Score<1]
-    return ports_selected.PortCode.values[::-1][:5]    
+    return ports_selected.PortCode.values[::-1][:output]    
 
   
 
 
 
 # Rolling Average, MACD, BOLL, KDJ
+# Demo:
+#   generate_states('银行', ['MACD', 'KDJ', [5, 10], 'BOLL'])
+
 def generate_states(industry_name, params):
     assert params.__class__ is list, 'Params must be in list form.'
     tradingday = industry_quote.TradingDay.values
