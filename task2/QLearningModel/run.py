@@ -37,5 +37,7 @@ while True:
     print('Action: ', a, 'Reward: ', r)
     if done:
         break
+        
 ratio = rewards / (test_window * 10)
 print('Rewards: ', rewards, 'Accuracy: ',ratio)
+

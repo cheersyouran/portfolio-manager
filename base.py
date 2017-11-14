@@ -7,12 +7,12 @@ STOCK_NUM=1
 
 PROJ_PATH='/Users/wangchengming/Documents/5001Project/Snowball/RL'
 
-QUTOE_PATH=PROJ_PATH+"/data/quote.csv"
-RECORDS_PATH=PROJ_PATH+"/data/records.csv"
-NAV_PATH=PROJ_PATH+"/data/nav.csv"
-INDUTRY_PATH=PROJ_PATH+'/data/industry.csv'
-INDUSTRYQUOTE_PATH=PROJ_PATH+'/data/industry_quote.csv'
-IR_WEEK_PATH=PROJ_PATH+'/data/IR_rank_week.csv'
+QUTOE_PATH=PROJ_PATH+"/quote.csv"
+RECORDS_PATH=PROJ_PATH+"/records.csv"
+NAV_PATH=PROJ_PATH+"/nav.csv"
+INDUTRY_PATH=PROJ_PATH+'/industry.csv'
+INDUSTRYQUOTE_PATH=PROJ_PATH+'/industry_quote.xlsx'
+IR_WEEK_PATH=PROJ_PATH+'/IR_rank_week.csv'
 
 S1_PATH=PROJ_PATH+'/stock_avg.csv'
 MODEL1_PATH=PROJ_PATH+"/store/model1.ckpt"
@@ -26,7 +26,7 @@ def load_records_csv():
 
 def load_quote_csv():
     print('load quote data....')
-    df = pd.read_csv(QUTOE_PATH, parse_dates=['TradingDay'])
+    df = pd.read_csv(QUTOE_PATH, parse_dates=['TradingDay'], sep='\t')
     df["TradingDay"] = df["TradingDay"].apply(lambda x: pd.to_datetime(x))
     return df
 
@@ -41,12 +41,13 @@ def load_industry_csv():
     df = pd.read_csv(INDUTRY_PATH)
     return df
 
-def load_industryquote_csv():
+def load_industryquote_xlsx():
     print('load industry quote data...')
-    df = pd.read_csv(INDUSTRYQUOTE_PATH, encoding='gbk')
-    ind = df.loc[:0, :].values[:, 1:].tolist()[0]
-    ind = [i[:-4] for i in ind]
-    df.columns = ['TradingDay'] + ind
+    df = pd.read_excel(INDUSTRYQUOTE_PATH)
+    df.columns = df.iloc[0, :].apply(lambda x: x[:-4]).values
+    df = df.iloc[2:]
+    df.index.names = ['TradingDay']
+    df.reset_index(inplace=True)
     return df
 
 def load_irweek_csv():
