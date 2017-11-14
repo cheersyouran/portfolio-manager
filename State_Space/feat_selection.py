@@ -21,6 +21,22 @@ def search_industies(port):
     return pd.Series(industries).dropna().values
 
 
+def search_port(indust, port_list=None, output=5):
+    mapping = industry.set_index('SecuCode').to_dict()['FirstIndustryName']
+    records_copy = records.copy()
+    records_copy.SecuCode = records_copy.SecuCode.map(mapping)
+    records_copy.drop('StockName', 1, inplace=True)
+    records_copy.columns = ['PortCode', 'Updated', 'Industry', 'PrevWeight', 'TargetWeight']
+    records_copy.Updated = records_copy.Updated.apply(lambda x: str(x)[:10])
+    records_copy.dropna(inplace=True)
+    portcodes = records_copy[records_copy.Industry == indust].PortCode.unique()
+    if port_list is not None:
+        portcodes = portcodes[pd.Series(portcodes).isin(port_list)]
+    ind = IR_rank.iloc[-300:].index
+    portcodes = ind[ind.isin(portcodes)]
+    return np.array(portcodes)[-output:][::-1]
+
+
 # For each portfolio, count how many times(days) they traded on one industry and then normalize.
 # Values between 0 and 1. 
 def generate_freq_table():
