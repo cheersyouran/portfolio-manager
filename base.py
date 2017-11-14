@@ -7,12 +7,12 @@ STOCK_NUM=1
 
 PROJ_PATH='/Users/wangchengming/Documents/5001Project/Snowball/RL'
 
-QUTOE_PATH=PROJ_PATH+"/quote.csv"
-RECORDS_PATH=PROJ_PATH+"/records.csv"
-NAV_PATH=PROJ_PATH+"/nav.csv"
-INDUTRY_PATH=PROJ_PATH+'/industry.csv'
-INDUSTRYQUOTE_PATH=PROJ_PATH+'/industry_quote.xlsx'
-IR_WEEK_PATH=PROJ_PATH+'/IR_rank_week.csv'
+QUTOE_PATH=PROJ_PATH+"/data/quote.csv"
+RECORDS_PATH=PROJ_PATH+"/data/records.csv"
+NAV_PATH=PROJ_PATH+"/data/nav.csv"
+INDUTRY_PATH=PROJ_PATH+'/data/industry.csv'
+INDUSTRYQUOTE_PATH=PROJ_PATH+'/data/industry_quote.xlsx'
+IR_WEEK_PATH=PROJ_PATH+'/data/IR_rank_week.csv'
 
 S1_PATH=PROJ_PATH+'/stock_avg.csv'
 MODEL1_PATH=PROJ_PATH+"/store/model1.ckpt"
@@ -26,7 +26,7 @@ def load_records_csv():
 
 def load_quote_csv():
     print('load quote data....')
-    df = pd.read_csv(QUTOE_PATH, parse_dates=['TradingDay'], sep='\t')
+    df = pd.read_csv(QUTOE_PATH, parse_dates=['TradingDay'])
     df["TradingDay"] = df["TradingDay"].apply(lambda x: pd.to_datetime(x))
     return df
 

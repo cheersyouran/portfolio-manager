@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import talib as tb
 import stockstats as st
-from sklearn.metrics.pairwise import cosine_similarity
+from scipy.spatial.distance import cosine
 from sklearn.metrics import f1_score
 
 
@@ -21,6 +21,8 @@ def search_industies(port):
     return pd.Series(industries).dropna().values
 
 
+# For each portfolio, count how many times(days) they traded on one industry and then normalize.
+# Values between 0 and 1. 
 def generate_freq_table():
     ind = IR_rank.iloc[-300:].index.values
     records_sub = records[records.PortCode.isin(ind)].copy()
@@ -44,7 +46,8 @@ def generate_freq_table():
     return port_num
 
 
-
+# For each portfolio, see whether they trade on one industry or not.
+# Values either 0 or 1.
 def generate_dummy_table():
     ind = IR_rank.iloc[-300:].index.values
     records_sub = records[records.PortCode.isin(ind)].copy()
@@ -89,7 +92,6 @@ def find_similar_ports_byFreq(port, thresh=0.5):
     ports_scores.sort_values(['Score'], inplace=True)
     ports_selected = ports_scores[ports_scores.Score>=thresh].loc[ports_scores.Score<0.98]
     return ports_selected.PortCode.values[::-1][:5]
-
 
 
 
@@ -162,14 +164,22 @@ def generate_states(industry_name, params):
         return KDJ[8:]
     
     states = pd.DataFrame([0]*len(tradingday), index=tradingday)
+    name = industry_name
     for feature in params:
         if feature.__class__ is list:
             states = states.merge(ave(industry_name, feature[0], feature[1]), 
                                   left_index=True, right_index=True)
+            name += '_' + str(feature[0]) + '_' + str(feature[1])
         elif feature == 'MACD':
             states = states.merge(macd(industry_name), left_index=True, right_index=True)
+            name += '_MACD'
         elif feature == 'BOLL':
             states = states.merge(boll(industry_name), left_index=True, right_index=True)
+            name += '_BOLL'
         elif feature == 'KDJ':
             states = states.merge(kdj(industry_name), left_index=True, right_index=True)
-    return states.iloc[:, 1:]
+            name += '_KDJ'
+    output = states.iloc[:, 1:]
+    output.index.names = ['TradingDay']
+    output.to_csv(name+'.csv')
+    return output

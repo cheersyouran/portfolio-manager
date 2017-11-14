@@ -8,7 +8,7 @@ quote = base.load_quote_csv()
 industry = base.load_industry_csv()
 records = base.load_records_csv()
 nav = base.load_nav_csv()
-industry_quote = base.load_industryquote_csv()
+industry_quote = base.load_industryquote_xlsx()
 
 
 def year_week(x):
