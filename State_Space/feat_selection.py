@@ -7,23 +7,23 @@ from scipy.spatial.distance import cosine
 from sklearn.metrics import f1_score
 
 
-IR_rank = base.load_irweek_csv()
-quote = base.load_quote_csv()
 industry = base.load_industry_csv()
-records = base.load_records_csv()
-industry_quote = base.load_industryquote_xlsx()
 
 
-def search_industies(port):
-    secucodes = records[records.PortCode == port].SecuCode.unique()
+def search_industries(port, df_records):
+    secucodes = df_records[df_records.PortCode == port].SecuCode.unique()
     dicts = industry.set_index(['SecuCode']).to_dict()['FirstIndustryName']
     industries = pd.Series(secucodes).map(dicts).unique()
     return pd.Series(industries).dropna().values
 
 
-def search_port(indust, port_list=None, output=5):
+# Demo:
+#   search_port('银行', df_records, IR_rank, ['ZH000199', 'ZH010630'], output=4)
+#   given records and IR rank data, from given portfolio list return 4 good portfolios (in the first 300 of IR rank) which trade on '银行'.
+
+def search_port(indust, df_records, IR_rank, port_list=None, output=5):
     mapping = industry.set_index('SecuCode').to_dict()['FirstIndustryName']
-    records_copy = records.copy()
+    records_copy = df_records.copy()
     records_copy.SecuCode = records_copy.SecuCode.map(mapping)
     records_copy.drop('StockName', 1, inplace=True)
     records_copy.columns = ['PortCode', 'Updated', 'Industry', 'PrevWeight', 'TargetWeight']
@@ -39,9 +39,9 @@ def search_port(indust, port_list=None, output=5):
 
 # For each portfolio, count how many times(days) they traded on one industry and then normalize.
 # Values between 0 and 1. 
-def generate_freq_table():
+def generate_freq_table(IR_rank, df_records):
     ind = IR_rank.iloc[-300:].index.values
-    records_sub = records[records.PortCode.isin(ind)].copy()
+    records_sub = df_records[df_records.PortCode.isin(ind)].copy()
     dicts = industry.set_index(['SecuCode']).to_dict()['FirstIndustryName']
     records_sub.SecuCode = records_sub.SecuCode.map(dicts)
     records_sub.drop('StockName', 1, inplace=True)
@@ -64,9 +64,9 @@ def generate_freq_table():
 
 # For each portfolio, see whether they trade on one industry or not.
 # Values either 0 or 1.
-def generate_dummy_table():
+def generate_dummy_table(IR_rank, df_records):
     ind = IR_rank.iloc[-300:].index.values
-    records_sub = records[records.PortCode.isin(ind)].copy()
+    records_sub = df_records[df_records.PortCode.isin(ind)].copy()
     dicts = industry.set_index(['SecuCode']).to_dict()['FirstIndustryName']
     records_sub.SecuCode = records_sub.SecuCode.map(dicts)
     records_sub.drop('StockName', 1, inplace=True)
@@ -83,17 +83,17 @@ def generate_dummy_table():
 
 # find similar portfolios using frequency table.
 # Demo:
-#   find_similar_ports_byFreq('ZH000199', ['ZH000283', 'ZH877294', 'ZH395487', 'ZH015838'], output=4)
-# from the portcodes list, return 4 portcodes that are most similar to ZH000199
+#   find_similar_ports_byFreq('ZH000199', df_records, IR_rank, ['ZH000283', 'ZH877294', 'ZH395487', 'ZH015838'], output=4)
+# given records data and IR rank data, from the portcodes list, return 4 portcodes that are most similar to ZH000199
 
-def find_similar_ports_byFreq(port, port_list=None, thresh=0.5, output=5):
-    port_num = generate_freq_table()
+def find_similar_ports_byFreq(port, df_records, IR_rank, port_list=None, thresh=0.5, output=5):
+    port_num = generate_freq_table(IR_rank, df_records)
     if port_list is not None:
         ind = np.array(port_list)
         ind = ind[pd.Series(ind).isin(port_num.index)]
         port_num = port_num.loc[ind]
     dicts = industry.set_index(['SecuCode']).to_dict()['FirstIndustryName']
-    records_copy = records[records.PortCode==port].copy()
+    records_copy = df_records[df_records.PortCode==port].copy()
     records_copy.SecuCode = records_copy.SecuCode.map(dicts)
     records_copy.columns = ['PortCode', 'Updated', 'Industry', 'StockName','PrevWeight', 'TargetWeight']
     records_copy = pd.DataFrame(records_copy.groupby(['PortCode', 'Updated']).apply(lambda x: 
@@ -125,8 +125,8 @@ def find_similar_ports_byFreq(port, port_list=None, thresh=0.5, output=5):
 #   find_similar_ports_byRegion('ZH000199', output=4)
 # return 4 portcodes that are most similar to ZH000199
 
-def find_similar_ports_byRegion(port, thresh=0.5, output=5):
-    Port_Region = generate_dummy_table()
+def find_similar_ports_byRegion(port, df_records, IR_rank, thresh=0.5, output=5):
+    Port_Region = generate_dummy_table(IR_rank, df_records)
     dicts = industry.set_index(['SecuCode']).to_dict()['FirstIndustryName']
     records_copy = records[records.PortCode==port].copy()
     records_copy.StockName = records_copy.SecuCode.map(dicts)
@@ -148,15 +148,15 @@ def find_similar_ports_byRegion(port, thresh=0.5, output=5):
 
 # Rolling Average, MACD, BOLL, KDJ
 # Demo:
-#   generate_states('银行', ['MACD', 'KDJ', [5, 10], 'BOLL'])
-
-def generate_states(industry_name, params):
+#   generate_states('银行', df_industry_quote, ['MACD', 'KDJ', [5, 10], [10, 15], 'BOLL'])
+#   given industry quote data, generate MACD, KDJ, 5-10-average, 10-15-average and BOLL of '银行' industry.
+def generate_states(industry_name, df_industry_quote, params):
     assert params.__class__ is list, 'Params must be in list form.'
-    tradingday = industry_quote.TradingDay.values
+    tradingday = df_industry_quote.TradingDay.values
     
     def ave(name, day1, day2):
-        roll_day1 = industry_quote.loc[:, name].rolling(day1).mean()
-        roll_day2 = industry_quote.loc[:, name].rolling(day2).mean()
+        roll_day1 = df_industry_quote.loc[:, name].rolling(day1).mean()
+        roll_day2 = df_industry_quote.loc[:, name].rolling(day2).mean()
         roll_diff = roll_day2 - roll_day1
         roll = pd.DataFrame(roll_diff)
         roll.columns = [name + '_' + str(day1) + '_' + str(day2)]
@@ -164,7 +164,7 @@ def generate_states(industry_name, params):
         return roll[day2-1:]
     
     def macd(name):
-        vals = industry_quote.loc[:, name].values.astype('float')
+        vals = df_industry_quote.loc[:, name].values.astype('float')
         dif = tb.MACD(vals)[0]
         dem = tb.MACD(vals)[1]
         macd = pd.DataFrame({'DIF_diff':dif, 'DIF_DEM':dem}, index=tradingday)
@@ -173,7 +173,7 @@ def generate_states(industry_name, params):
         return macd[34:]
     
     def boll(name):
-        vals = pd.DataFrame(industry_quote.loc[:, name])
+        vals = pd.DataFrame(df_industry_quote.loc[:, name])
         vals.columns = ['close']
         stdf = st.StockDataFrame.retype(vals)
         boll = stdf['boll']
@@ -185,7 +185,7 @@ def generate_states(industry_name, params):
         return BOLL[1:]
     
     def kdj(name):
-        vals = pd.DataFrame(industry_quote.loc[:, name]).applymap(lambda x: float(x))
+        vals = pd.DataFrame(df_industry_quote.loc[:, name]).applymap(lambda x: float(x))
         vals.columns = ['close']
         vals['low'] = vals.close.rolling(5).min()
         vals['high'] = vals.close.rolling(5).max()
@@ -220,10 +220,10 @@ def generate_states(industry_name, params):
 
 
 # Demo:
-#   periods, count = get_active_periods('ZH000199')
+#   periods, count = get_active_periods('ZH000199', df_records)
 
-def get_active_periods(port):
-    periods = records[records.PortCode == port].Updated.apply(lambda x: str(x)[:10])
+def get_active_periods(port, df_records):
+    periods = df_records[df_records.PortCode == port].Updated.apply(lambda x: str(x)[:10])
     periods = pd.DataFrame(periods.unique())
     periods.columns = [port + '_Periods']
     count = len(periods)
