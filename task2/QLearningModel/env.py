@@ -4,8 +4,8 @@ import base
 class Env():
     def __init__(self, train_window, test_window):
         self.portcodes = ['ZH010630']
-        data = base.load_states_csv()
-        self.states = data.drop(data.index[:40]).round(0).drop('Appliance', axis=1)
+        data = base.load_certain_states_csv()
+        self.states = data.drop(data.index[:40]).round(0)
         self.nav = base.load_nav_csv()
         self.count = 1
         self.phase = 'Train'

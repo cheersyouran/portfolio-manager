@@ -40,8 +40,9 @@ class env(Env):
     def step(self, action):
         obs = self.get_observation()
         r = self.get_reward_for_dqn(action)
+        done = self.whether_done()
         self.count = self.count + 1
-        return obs, r, self.whether_done(),  {}
+        return obs, r, done,  {}
 
     def reset(self):
         self.count = 1

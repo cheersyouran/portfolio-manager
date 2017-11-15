@@ -32,8 +32,4 @@ def check_portcodes_detial(portcodes):
     tmp1.columns = portcodes
     return tmp1
 
-#显示Q-Learning的错误操作信息
-def check_portcode_detial(portcodes):
-    df = base.load_nav_csv()
-    df = df[df['PortCode'] == portcode]
-    return df
+#if __name__ == '__main__':
