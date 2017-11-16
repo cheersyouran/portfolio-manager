@@ -1,6 +1,6 @@
 import pandas as pd
 
-PROJ_PATH='~/Projects/PortfolioManagement'
+PROJ_PATH='/Users/wangchengming/Documents/5001Project/Snowball/RL'
 
 QUTOE_PATH=PROJ_PATH+"/data/quote.csv"
 RECORDS_PATH=PROJ_PATH+"/data/records.csv"

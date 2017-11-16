@@ -215,6 +215,10 @@ def generate_states(industry_name, df_industry_quote, params):
     output = states.iloc[:, 1:]
     output.index.names = ['TradingDay']
     # output.to_csv(name+'.csv')
+    output_mean = output.mean(axis=0)
+    output_std = output.std(axis=0)
+    output = (output - output_mean) / output_std
+    output = output.applymap(lambda x: round(x, 1))
     return output
 
 
