@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/Users/Youran/Projects/PortfolioManagement')
+print(sys.path)
 from task2.QLearningModel_beta.env import Env
 from task2.QLearningModel_beta.QLearningModel import QLearningModel
 from task2.QLearningModel_beta.market import Market
@@ -13,8 +16,8 @@ def run_a_kind_of_model(kind):
     print('#######################################################################')
     print('Kind:', kind)
     env.kind = kind
-    count = 0
     while True:
+        count = 0
         episode = 1
         while True:
             rewards = 0
@@ -35,6 +38,8 @@ def run_a_kind_of_model(kind):
             if (ratio > 0.9):
                 break
             episode = episode + 1
+
+
 
         rewards = 0
         obs = env.get_obs()
