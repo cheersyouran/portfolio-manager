@@ -9,7 +9,7 @@ class Market():
         self.nav = base.load_nav_csv()
         self.records = base.load_records_csv()
         self.current_date = time
-        self.trading_data_df = base.load_trading_day_csv()
+        self.trading_day_df = base.load_trading_day_csv()
 
     # return : industry_quote, records, nav
     def get_daily_market(self, date=None):
@@ -23,17 +23,10 @@ class Market():
     def get_past_market(self, date=None):
         if (date == None):
             date = self.current_date
+        date = date + timedelta(days=1)
         industry_quote = self.insdustry_quote[self.insdustry_quote['TradingDay'] <= date]
         records = self.records[self.records['Updated'] <= date]
         nav = self.nav[self.nav['NavDate'] <= date]
-        return industry_quote, records, nav
-
-    def get_previous_market(self, date=None):
-        if (date == None):
-            date = self.current_date
-        industry_quote = self.insdustry_quote[self.insdustry_quote['TradingDay'] >= date]
-        records = self.records[self.records['Updated'] >= date]
-        nav = self.nav[self.nav['NavDate'] >= date]
         return industry_quote, records, nav
 
     def get_between_market(self, from_date=None, to_date=None):
@@ -47,8 +40,8 @@ class Market():
         return industry_quote, records, nav
 
     def pass_a_day(self):
-        next_day = self.trading_data_df.iloc[self.trading_data_df[(self.trading_data_df['TradingDate'] == date)].index+1].values
-        self.current_date = next_day[0]
+        next_day = self.trading_day_df[(self.trading_day_df['TradingDate'] > self.current_date)]['TradingDate'].iloc[0].date()
+        self.current_date = next_day
 
     def reset(self):
         self.current_date = time
