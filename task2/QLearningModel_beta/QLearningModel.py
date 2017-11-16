@@ -10,6 +10,7 @@ class QLearningModel:
         self.gamma = gamma
         self.epsilon = e_greedy
         self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
+        self.q_table_frequent = pd.DataFrame(columns=self.actions, dtype=np.float64)
 
     def choose_action(self, observation):
         self.check_state_exist(observation)
@@ -29,6 +30,7 @@ class QLearningModel:
         else:
             q_target = r  # next state is terminal
         self.q_table.ix[s, a] += self.lr * (q_target - q_predict)  # update
+        self.q_table_frequent.ix[s, a] += 1
 
     def check_state_exist(self, state):
         if state not in self.q_table.index:
@@ -37,6 +39,13 @@ class QLearningModel:
                 pd.Series(
                     [0]*len(self.actions),
                     index=self.q_table.columns,
+                    name=state,
+                )
+            )
+            self.q_table_frequent = self.q_table_frequent.append(
+                pd.Series(
+                    [0]*len(self.actions),
+                    index=self.q_table_frequent.columns,
                     name=state,
                 )
             )
