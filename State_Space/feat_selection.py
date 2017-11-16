@@ -142,6 +142,36 @@ def find_similar_ports_byRegion(port, df_records, IR_rank, thresh=0.5, output=5)
     ports_selected = ports_scores[ports_scores.Score>=thresh].loc[ports_scores.Score<1]
     return ports_selected.PortCode.values[::-1][:output]    
 
+
+
+def func(x):
+    x = 1 if x>=0 else 0
+    return x
+
+def func2(x):
+    if x<=20:
+        x = 1
+    elif x>=80:
+        x = -1
+    else:
+        x = 0
+    return x
+
+def func3(x):
+    if x<=0:
+        x = 1
+    elif x>=1:
+        x = -1
+    else:
+        x = 0
+    return x
+
+def func4(x):
+    if x<=0.1:
+        x = 1
+    else:
+        x = 0
+    return x
   
 
 
@@ -161,6 +191,7 @@ def generate_states(industry_name, df_industry_quote, params):
         roll = pd.DataFrame(roll_diff)
         roll.columns = [name + '_' + str(day1) + '_' + str(day2)]
         roll.index = tradingday
+        roll = pd.DataFrame(roll.iloc[:, 0].apply(func))
         return roll[day2-1:]
     
     def macd(name):
@@ -170,6 +201,8 @@ def generate_states(industry_name, df_industry_quote, params):
         macd = pd.DataFrame({'DIF_diff':dif, 'DIF_DEM':dem}, index=tradingday)
         macd.DIF_DEM = macd.DIF_diff - macd.DIF_DEM
         macd.DIF_diff = macd.DIF_diff.diff()
+        macd.DIF_DEM = macd.DIF_DEM.apply(func)
+        macd.DIF_diff = macd.DIF_diff.apply(func)
         return macd[34:]
     
     def boll(name):
@@ -182,6 +215,8 @@ def generate_states(industry_name, df_industry_quote, params):
         b = (vals.close-boll_down).div(boll_up-boll_down)
         bdwidth = (boll_up-boll_down).div(boll)
         BOLL = pd.DataFrame({'percent_b':b.values, 'bdwidth':bdwidth.values}, index=tradingday)
+        BOLL.percent_b = BOLL.percent_b.apply(func3)
+        BOLL.bdwidth = BOLL.bdwidth.apply(func4)
         return BOLL[1:]
     
     def kdj(name):
@@ -194,6 +229,8 @@ def generate_states(industry_name, df_industry_quote, params):
             vals.high.loc[i] = np.max(vals.close.values[:i+1])
         k, d = tb.STOCH(vals.high.values, vals.low.values, vals.close.values.astype('float'))
         KDJ = pd.DataFrame({'KDJ_K':k, 'KDJ_D':d}, index=tradingday)
+        KDJ.KDJ_K = KDJ.KDJ_K.apply(func2)
+        KDJ.KDJ_D = KDJ.KDJ_D.apply(func2)
         return KDJ[8:]
     
     states = pd.DataFrame([0]*len(tradingday), index=tradingday)
@@ -214,9 +251,7 @@ def generate_states(industry_name, df_industry_quote, params):
             name += '_KDJ'
     output = states.iloc[:, 1:]
     output.index.names = ['TradingDay']
-    # output.to_csv(name+'.csv')
-    output = (output - np.min(output, axis=0)) / (np.max(output, axis=0) - np.min(output, axis=0)) * 5
-    output = output.applymap(lambda x: round(x))
+    output.to_csv(name+'.csv')
     return output
 
 
