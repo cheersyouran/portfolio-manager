@@ -1,22 +1,21 @@
 import sys
 sys.path.append('/Users/Youran/Projects/PortfolioManagement')
-print(sys.path)
 from task2.QLearningModel_beta.env import Env
 from task2.QLearningModel_beta.QLearningModel import QLearningModel
 from task2.QLearningModel_beta.market import Market
 
-train_window = 500
+train_window = 50
 test_window = 10
 
 market = Market()
-env = Env(train_window, test_window, market)
-RL = QLearningModel(actions=list(range(env.nb_portcodes+1)))
 
 def run_a_kind_of_model(kind):
     print('#######################################################################')
     print('Kind:', kind)
-    env.kind = kind
     while True:
+        env = Env(train_window, test_window, market)
+        env.kind = kind
+        RL = QLearningModel(actions=list(range(env.nb_portcodes + 1)))
         count = 0
         episode = 1
         while True:
@@ -37,9 +36,9 @@ def run_a_kind_of_model(kind):
             print('Episode: ', episode, 'Rewards: ', rewards, 'Accuracy: ', ratio)
             if (ratio > 0.9):
                 break
+            if (episode > 10):
+                break
             episode = episode + 1
-
-
 
         rewards = 0
         obs = env.get_obs()
@@ -56,5 +55,6 @@ def run_a_kind_of_model(kind):
         market.pass_a_day()
 
 
-run_a_kind_of_model('银行')
+# run_a_kind_of_model('银行')
+run_a_kind_of_model('计算机')
 
