@@ -18,10 +18,10 @@ def search_industries(port, df_records):
 
 
 # Demo:
-#   search_port('银行', df_records, IR_rank, ['ZH000199', 'ZH010630'], output=4)
-#   given records and IR rank data, from given portfolio list return 4 good portfolios (in the first 300 of IR rank) which trade on '银行'.
+#   search_port('银行', df_records, df_nav, IR_rank, ['ZH000199', 'ZH010630'], output=4)
+#   given records and IR rank data, from given portfolio list return 4 good portfolios (in the first 300 of IR rank) which trade on '银行' and still exist.
 
-def search_port(indust, df_records, IR_rank, port_list=None, output=5):
+def search_port(indust, df_records, df_nav, IR_rank, port_list=None, output=5):
     mapping = industry.set_index('SecuCode').to_dict()['FirstIndustryName']
     records_copy = df_records.copy()
     records_copy.SecuCode = records_copy.SecuCode.map(mapping)
@@ -32,6 +32,9 @@ def search_port(indust, df_records, IR_rank, port_list=None, output=5):
     portcodes = records_copy[records_copy.Industry == indust].PortCode.unique()
     if port_list is not None:
         portcodes = portcodes[pd.Series(portcodes).isin(port_list)]
+    last_day = np.sort(df_nav.NavDate.unique())[-1]
+    ind2 = pd.Series(nav[nav.NavDate == last_day].PortCode.unique())
+    portcodes = ind2[ind2.isin(portcodes)]
     ind = IR_rank.iloc[-300:].index
     portcodes = ind[ind.isin(portcodes)]
     return np.array(portcodes)[-output:][::-1]
