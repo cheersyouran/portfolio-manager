@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import threading
 from State_Space import feat_selection
 
 class Env():
@@ -34,7 +35,7 @@ class Env():
         if(self.window_states is None):
             self.window_states = self.generate_state(self.industry_quote).iloc[-(self.test_window + self.train_window + 1):].round(0)
         self.current_state = self.window_states.iloc[self.count]
-        return self.current_state
+        return self.current_state.values
 
     def get_reward(self, action):
 
@@ -75,6 +76,6 @@ class Env():
             self.done = False
 
     def generate_state(self, df_industry_quote):
-        status = feat_selection.generate_states(self.kind, df_industry_quote, ['MACD', 'KDJ', [5, 10], [1, 3], 'BOLL'])
+        status = feat_selection.generate_states(self.kind, df_industry_quote, ['MACD', [5, 10], [2, 5], 'BOLL'])
         return status
 
