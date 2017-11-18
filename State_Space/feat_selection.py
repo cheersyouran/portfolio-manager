@@ -33,7 +33,7 @@ def search_port(indust, df_records, df_nav, IR_rank, port_list=None, output=5):
     if port_list is not None:
         portcodes = portcodes[pd.Series(portcodes).isin(port_list)]
     last_day = np.sort(df_nav.NavDate.unique())[-1]
-    ind2 = pd.Series(nav[nav.NavDate == last_day].PortCode.unique())
+    ind2 = pd.Series(df_nav[df_nav.NavDate == last_day].PortCode.unique())
     portcodes = ind2[ind2.isin(portcodes)]
     ind = IR_rank.iloc[-300:].index
     portcodes = ind[ind.isin(portcodes)]
