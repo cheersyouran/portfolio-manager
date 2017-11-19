@@ -4,7 +4,7 @@ import pandas as pd
 #learning_rate=0.1, gamma=0, e_greedy=1时候，最多迭代action次
 
 class QLearningModel:
-    def __init__(self, actions, learning_rate=0.1, gamma=0, e_greedy=1):
+    def __init__(self, actions, learning_rate=0.1, gamma=0, e_greedy=0.9):
         self.actions = actions
         self.lr = learning_rate
         self.gamma = gamma
@@ -34,7 +34,6 @@ class QLearningModel:
 
     def check_state_exist(self, state):
         if state not in self.q_table.index:
-            # append new state to q table
             self.q_table = self.q_table.append(pd.Series([0]*len(self.actions),index=self.q_table.columns,name=state,))
         if state not in self.q_table_frequent.index:
             self.q_table_frequent = self.q_table_frequent.append(pd.Series([0]*len(self.actions),index=self.q_table_frequent.columns,name=state,))

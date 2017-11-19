@@ -1,7 +1,7 @@
 import base
 from datetime import datetime,timedelta
 
-time = datetime(2017, 6, 12)
+time = datetime(2017, 8, 14).date()
 
 class Market():
     def __init__(self):
