@@ -1,5 +1,6 @@
 import numpy as np
-import pandas as pd
+import base
+from State_Space.Generate_IR_rank_week import generate_IR_rank
 
 from State_Space import feat_selection
 
@@ -7,9 +8,10 @@ class Env():
     def __init__(self, train_window, test_window, market, kind, features):
         self.nb_portcodes = 2
         self.count = 0
-        self.industry_quote, self.records, self.nav = market.get_past_market()
-        self.IR_rank = pd.read_csv('~/Projects/PortfolioManagement/State_Space/IR_rank_week.csv', index_col=0)
-        self.portcodes = feat_selection.search_port(kind, self.records, self.nav, self.IR_rank, output=2)
+        self.industry_quote, self.records, self.nav, self.quote = market.get_past_market()
+        # self.IR_rank = generate_IR_rank(self.records, self.nav, self.industry_quote, self.quote, save_path=None)
+        self.IR_rank = base.load_irweek_csv()
+        self.portcodes = feat_selection.search_port(kind, self.records, self.nav, self.IR_rank, day=train_window+test_window, output=2)
         self.current_state = None
         self.next_state = None
         self.phase = 'Train'
