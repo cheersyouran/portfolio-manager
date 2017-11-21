@@ -5,8 +5,8 @@ from task2.QLearningModel_beta.env import Env
 from task2.QLearningModel_beta.QLearningModel import QLearningModel
 from task2.QLearningModel_beta.market import Market
 
-train_window = 150
-test_window = 30
+train_window = 10
+test_window = 1
 
 market = Market()
 
@@ -44,13 +44,13 @@ def run_a_kind_of_model(kind, features):
             rewards = rewards + r
             print('Action: ', a, 'Reward: ', r)
             obs = obs_
-            # fd = open('result.csv', 'a')
-            # for i in range(env.nb_portcodes) :
-            #     if (a == i):
-            #         fd.write(''.join([str(market.current_date),',', env.portcodes[i],',','1', '\n']))
-            #     else:
-            #         fd.write(''.join([str(market.current_date),',',env.portcodes[i],',','0', '\n']))
-            # fd.close()
+            fd = open('result.csv', 'a')
+            for i in range(env.nb_portcodes) :
+                if (a == i):
+                    fd.write(''.join([str(market.current_date),',', env.portcodes[i],',','1', '\n']))
+                else:
+                    fd.write(''.join([str(market.current_date),',',env.portcodes[i],',','0', '\n']))
+            fd.close()
             if done:
                 break
         ratio = rewards / (test_window * 10)
