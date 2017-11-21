@@ -11,11 +11,10 @@ test_window = 30
 market = Market()
 
 def run_a_kind_of_model(kind, features):
-    print('#######################################################################')
     print('Kind:', kind)
     while True:
         env = Env(train_window, test_window, market, kind, features)
-        RL = QLearningModel(actions=list(range(env.nb_portcodes + 1)))
+        RL = QLearningModel(actions=list(range(env.nb_portcodes + 1)), random_step = 300)
         count = 0
         episode = 1
         while True:
@@ -58,11 +57,8 @@ def run_a_kind_of_model(kind, features):
         print('Rewards: ', rewards, 'Accuracy: ', ratio)
         market.pass_a_day()
 
-# run_a_kind_of_model('银行')
-# t1 = run_a_kind_of_model('计算机', [[1, 2], [1, 3], [1, 4], [1, 5]])
-# t2 = run_a_kind_of_model('计算机', [[1, 2]])
-# t3 = run_a_kind_of_model('计算机', ['MACD', 'BOLL', [1,3]])
-# t4 = run_a_kind_of_model('银行', [[1, 2], [1, 3], [1, 4], [1, 5]])
 
-
-added_thread = threading.Thread(target=run_a_kind_of_model('计算机', [[1, 3]]), name='T1')
+t1 = threading.Thread(target=run_a_kind_of_model, args=('计算机', [[1, 2]]), name='T1')
+t1.start()
+# t2 = threading.Thread(target=run_a_kind_of_model, args=('银行', [[1, 2]]), name='T2')
+# t2.start()
