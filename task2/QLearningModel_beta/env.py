@@ -6,7 +6,7 @@ from State_Space import feat_selection
 
 class Env():
     def __init__(self, train_window, test_window, market, kind, features):
-        self.nb_portcodes = 2
+        self.nb_portcodes = 3
         self.count = 0
         self.industry_quote, self.records, self.nav, self.quote = market.get_past_market()
         # self.IR_rank = generate_IR_rank(self.records, self.nav, self.industry_quote, self.quote, save_path=None)
