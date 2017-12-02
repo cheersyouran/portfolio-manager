@@ -1,7 +1,7 @@
 import base
 from datetime import datetime,timedelta
 
-time = datetime(2017, 8, 14).date()
+time = datetime(2017, 1, 1).date()
 
 class Market():
     def __init__(self):
@@ -10,6 +10,7 @@ class Market():
         self.records = base.load_records_csv()
         self.current_date = time
         self.trading_day_df = base.load_trading_day_csv()
+        self.quote = base.load_quote_csv()
 
     # return : industry_quote, records, nav
     def get_daily_market(self, date=None):
@@ -27,7 +28,8 @@ class Market():
         industry_quote = self.insdustry_quote[self.insdustry_quote['TradingDay'] <= date]
         records = self.records[self.records['Updated'] <= date]
         nav = self.nav[self.nav['NavDate'] <= date]
-        return industry_quote, records, nav
+        quote = self.quote[self.quote['TradingDay'] <= date]
+        return industry_quote, records, nav, quote
 
     def get_between_market(self, from_date=None, to_date=None):
         if (from_date == None):

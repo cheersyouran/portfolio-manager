@@ -1,15 +1,17 @@
 import numpy as np
-import pandas as pd
+import base
+from State_Space.Generate_IR_rank_week import generate_IR_rank
 
 from State_Space import feat_selection
 
 class Env():
     def __init__(self, train_window, test_window, market, kind, features):
-        self.nb_portcodes = 2
+        self.nb_portcodes = 3
         self.count = 0
-        self.industry_quote, self.records, self.nav = market.get_past_market()
-        self.IR_rank = pd.read_csv('~/Projects/PortfolioManagement/State_Space/IR_rank_week.csv', index_col=0)
-        self.portcodes = feat_selection.search_port(kind, self.records, self.nav, self.IR_rank, output=2)
+        self.industry_quote, self.records, self.nav, self.quote = market.get_past_market()
+        # self.IR_rank = generate_IR_rank(self.records, self.nav, self.industry_quote, self.quote, save_path=None)
+        self.IR_rank = base.load_irweek_csv()
+        self.portcodes = feat_selection.search_port(kind, self.records, self.nav, self.IR_rank, day=train_window+test_window, output=3)
         self.current_state = None
         self.next_state = None
         self.phase = 'Train'
@@ -38,7 +40,7 @@ class Env():
         self.current_state = self.window_states.iloc[self.count]
         return self.current_state.values
 
-    def get_reward(self, action):
+    def get_reward1(self, action):
         self.next_state = self.window_states.iloc[self.count + 1]
         date = self.current_state.name
         date_ = self.next_state.name
@@ -64,6 +66,24 @@ class Env():
         else:
             reward = -10
         return reward
+
+    def get_reward(self, action):
+        self.next_state = self.window_states.iloc[self.count + 1]
+        date = self.current_state.name
+        date_ = self.next_state.name
+
+        rs = np.array([])
+        rs_ = np.array([])
+        for p in self.portcodes:
+            r = self.nav[(self.nav['NavDate'] == date) & (self.nav['PortCode'] == p)]['Nav'].values
+            r_ = self.nav[(self.nav['NavDate'] == date_) & (self.nav['PortCode'] == p)]['Nav'].values
+            rs = np.append(rs, r if r.size == 1 else 0)
+            rs_ = np.append(rs_, r_ if r_.size == 1 else 0)
+        ratio = np.nan_to_num((rs_ - rs) / rs)
+
+        ratio = np.insert(ratio, 0, 0)
+        reward = ratio[action]
+        return reward * 1000
 
     def reset(self):
         self.count = 0

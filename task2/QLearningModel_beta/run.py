@@ -1,3 +1,4 @@
+#encoding:utf-8
 import sys
 import threading
 sys.path.append('/Users/Youran/Projects/PortfolioManagement')
@@ -5,17 +6,17 @@ from task2.QLearningModel_beta.env import Env
 from task2.QLearningModel_beta.QLearningModel import QLearningModel
 from task2.QLearningModel_beta.market import Market
 
-train_window = 150
-test_window = 30
+train_window = 10
+test_window = 1
 
 market = Market()
 
 def run_a_kind_of_model(kind, features):
-    print('#######################################################################')
+
     print('Kind:', kind)
     while True:
         env = Env(train_window, test_window, market, kind, features)
-        RL = QLearningModel(actions=list(range(env.nb_portcodes + 1)))
+        RL = QLearningModel(actions=list(range(env.nb_portcodes + 1)), random_step=300)
         count = 0
         episode = 1
         while True:
@@ -39,30 +40,27 @@ def run_a_kind_of_model(kind, features):
 
         rewards = 0
         obs = env.get_obs()
+        fd = open('result.csv', 'a')
         while True:
             a = RL.choose_action(str(obs))
             obs_, r, done = env.step(a)
             rewards = rewards + r
             print('Action: ', a, 'Reward: ', r)
             obs = obs_
-            # fd = open('result.csv', 'a')
-            # for i in range(env.nb_portcodes) :
-            #     if (a == i):
-            #         fd.write(''.join([str(market.current_date),',', env.portcodes[i],',','1', '\n']))
-            #     else:
-            #         fd.write(''.join([str(market.current_date),',',env.portcodes[i],',','0', '\n']))
-            # fd.close()
+            for i in range(env.nb_portcodes):
+                if (a==i):
+                    fd.write(''.join([str(market.current_date), ',', env.portcodes[i], ',', '1', '\n']))
+                else:
+                    fd.write(''.join([str(market.current_date), ',', env.portcodes[i], ',', '0', '\n']))
             if done:
                 break
+        fd.close()
+
         ratio = rewards / (test_window * 10)
         print('Rewards: ', rewards, 'Accuracy: ', ratio)
         market.pass_a_day()
 
-# run_a_kind_of_model('银行')
-# t1 = run_a_kind_of_model('计算机', [[1, 2], [1, 3], [1, 4], [1, 5]])
-# t2 = run_a_kind_of_model('计算机', [[1, 2]])
-# t3 = run_a_kind_of_model('计算机', ['MACD', 'BOLL', [1,3]])
-# t4 = run_a_kind_of_model('银行', [[1, 2], [1, 3], [1, 4], [1, 5]])
-
-
-added_thread = threading.Thread(target=run_a_kind_of_model('计算机', [[1, 3]]), name='T1')
+t1 = threading.Thread(target=run_a_kind_of_model, args=('计算机', [[1, 2]]), name='T1')
+t1.start()
+# t2 = threading.Thread(target=run_a_kind_of_model, args=('银行', [[1, 2]]), name='T2')
+# t2.start()

@@ -260,7 +260,7 @@ def generate_states(industry_name, df_industry_quote, params):
             name += '_KDJ'
     output = states.iloc[:, 1:]
     output.index.names = ['TradingDay']
-    output.to_csv(name+'.csv')
+    # output.to_csv(name+'.csv')
     return output
 
 
