@@ -21,7 +21,7 @@ def load_records_csv():
 
 def load_quote_csv():
     print('load quote data....')
-    df = pd.read_csv(QUTOE_PATH, parse_dates=['TradingDay'])
+    df = pd.read_csv(QUTOE_PATH, parse_dates=['TradingDay'], sep='\t')
     df["TradingDay"] = df["TradingDay"].apply(lambda x: pd.to_datetime(x))
     return df
 
