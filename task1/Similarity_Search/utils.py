@@ -4,10 +4,10 @@ import numpy as np
 import datetime
 import time
 from bitarray import bitarray
-import base
+import RL.base
 
-quote = base.load_quote_csv()
-industry = base.load_industry_csv()
+quote = RL.base.load_quote_csv()
+industry = RL.base.load_industry_csv()
 quote.dropna(inplace=True)
 
 
@@ -63,13 +63,13 @@ def get_prediction(mat, vec, front=0.1, adjust=True, prob=False):
         return float(counts)
 
 
-def find_similar_secu(code):
+def find_similar_secu(code, mapping, mapping_reverse):
     industry = mapping[code]
     return mapping_reverse[industry]
 
 
 # For every incoming day, update historical matrices of all security codes with current signs windows.
-def update_all_signs_bit(date_):
+def update_all_signs_bit(date_, quote_test, mapping, signs_dict, WINDOW_SIZE=10):
     secu_updown = quote_test[quote_test.TradingDay == date_].loc[:, ['SecuCode', 'ChangePCT']]
     secu_updown.set_index(['SecuCode'], inplace=True)
     secu_signs = pd.DataFrame(secu_updown.ChangePCT.apply(lambda x: func(x)))
@@ -81,7 +81,7 @@ def update_all_signs_bit(date_):
         signs_bit = signs_dict[indust][code]
         if len(signs_bit) == 0:
             continue
-        last_row = signs_bit[-10:]
+        last_row = signs_bit[-WINDOW_SIZE:]
         last_row = np.array(list(last_row.to01())).astype('int')
         update_row = np.insert(last_row[1:], len(last_row)-1, update_sign)
         signs_bit.extend(update_row)

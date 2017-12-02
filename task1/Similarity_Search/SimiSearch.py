@@ -1,21 +1,22 @@
 
 import pandas as pd
 import numpy as np
-import base
+import RL.base
 from utils import *
 from bitarray import bitarray
+from RL.task1.Similarity_Search.CONFIG import *
 
 
-# window_size should be the same as those in the historical matrices.
-NUM_DAY = 20
-NUM_CODES = 200
-TOP = 6
-WINDOW_SIZE = 10
-
-
-quote = base.load_quote_csv()
-industry = base.load_industry_csv()
+quote = RL.base.load_quote_csv()
+industry = RL.base.load_industry_csv()
 quote.dropna(inplace=True)
+
+
+mapping = industry.set_index(['SecuCode']).to_dict()['FirstIndustryName']
+ind_sec = pd.DataFrame(industry.groupby(['FirstIndustryName']).apply(lambda x:
+                                                    x.SecuCode[x.SecuCode.isin(quote.SecuCode)].unique()))
+ind_sec.columns = ['SecuCodes']
+mapping_reverse = ind_sec.to_dict()['SecuCodes']
 
 
 # Some codes have no industry information. Just drop them.
@@ -51,7 +52,7 @@ top.columns = ['tradingday', 'stockcode', 'stockweight']
 for i in range(NUM_DAY):
     date_  = quote_test.TradingDay.iloc[i]
     date = quote_test.TradingDay.iloc[i+1]
-    update_all_signs_bit(date_, WINDOW_SIZE)
+    update_all_signs_bit(date_, quote_test, mapping, signs_dict, WINDOW_SIZE)
     secu_codes = quote_test[quote_test.TradingDay == date].SecuCode.unique()
     secu_probs = {}
     for code in secu_codes[:NUM_CODES]:
@@ -60,7 +61,7 @@ for i in range(NUM_DAY):
         vec = np.array(list(signs_bit[-WINDOW_SIZE:].to01())).astype('int')
         
         secu_distribution = []
-        for secu in find_similar_secu(code):
+        for secu in find_similar_secu(code, mapping, mapping_reverse):
             signs_bit = signs_dict[indust][secu]
             signs_mat = np.array(list(signs_bit.to01())).astype('int').reshape((-1, WINDOW_SIZE))
             secu_distribution.extend(get_distribution(signs_mat, vec, front=0.2))
@@ -77,8 +78,8 @@ top = top[1:]
 top.tradingday = top.tradingday.apply(lambda x: str(x)[:10])
 
 
-# top.to_csv('/Users/wangchengming/Documents/5001Project/Snowball/EvaluationDemo/task1_my_input3.csv', index=None)
+top.to_csv('/Users/wangchengming/Documents/5001Project/Snowball/EvaluationDemo/Task1_output.csv', index=None)
 
-base_weights = generate_baseline_weights_2(NUM_DAY, 10)
+# base_weights = generate_baseline_weights_2(NUM_DAY, 10)
 # base_weights.to_csv('/Users/wangchengming/Documents/5001Project/Snowball/EvaluationDemo/task1_baseline2.csv', 
                      # index=None)
