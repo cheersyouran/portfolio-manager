@@ -9,8 +9,8 @@ class Env():
         self.nb_portcodes = 3
         self.count = 0
         self.industry_quote, self.records, self.nav, self.quote = market.get_past_market()
-        # self.IR_rank = generate_IR_rank(self.records, self.nav, self.industry_quote, self.quote, save_path=None)
-        self.IR_rank = base.load_irweek_csv()
+        self.IR_rank = generate_IR_rank(self.records, self.nav, self.industry_quote, self.quote, save_path=None)
+        # self.IR_rank = base.load_irweek_csv()
         self.portcodes = feat_selection.search_port(kind, self.records, self.nav, self.IR_rank, day=train_window+test_window, output=3)
         self.current_state = None
         self.next_state = None
@@ -53,10 +53,6 @@ class Env():
             rs = np.append(rs, r if r.size == 1 else 0)
             rs_ = np.append(rs_, r_ if r_.size == 1 else 0)
         ratio = np.nan_to_num((rs_ - rs) / rs)
-
-        # r = self.nav[(self.nav['NavDate'] == date) & (self.nav['PortCode'].isin(self.portcodes))]['Nav'].values
-        # r_ = self.nav[(self.nav['NavDate'] == date_) & (self.nav['PortCode'].isin(self.portcodes))]['Nav'].values
-        # ratio = (r_ - r) / r
 
         ratio = np.insert(ratio, 0, 0)
         reward = ratio[action]

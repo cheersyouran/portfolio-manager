@@ -1,6 +1,5 @@
-import numpy as np
 import pandas as pd
-
+import numpy as np
 #learning_rate=0.1, gamma=0, e_greedy=1时候，最多迭代action次
 
 class QLearningModel:

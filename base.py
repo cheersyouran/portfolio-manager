@@ -2,6 +2,7 @@
 import pandas as pd
 
 PROJ_PATH='/Users/Youran/Projects/PortfolioManagement/'
+DATE='2017-01-01'
 
 QUTOE_PATH=PROJ_PATH+"/data/quote.csv"
 RECORDS_PATH=PROJ_PATH+"/data/records.csv"
@@ -11,8 +12,6 @@ INDUSTRYQUOTE_PATH=PROJ_PATH+'/data/industry_quote.xlsx'
 IR_WEEK_PATH=PROJ_PATH+'/State_Space/IR_rank_week.csv'
 CERTAIN_STATE=PROJ_PATH+'/State_Space/银行_MACD_5_10_BOLL.csv'
 TRADING_DAY=PROJ_PATH+'/data/tradingday.csv'
-
-S1_PATH=PROJ_PATH+'/stock_avg.csv'
 
 def load_records_csv():
     print('load records data....')
