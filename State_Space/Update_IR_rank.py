@@ -103,7 +103,7 @@ def Update_IR_rank(date, df_records, df_ind_quote, df_nav, df_quote, IR_rank, sa
     new_port_stock_mapping.columns = ['PortCode', 'Updated', 'Secu_Code']
     new_records = pd.concat([new_records, new_port_stock_mapping])
     new_market = new_records.groupby(['PortCode']).apply(lambda x: new_quote_temp[new_quote_temp.SecuCode.isin(
-                x.Secu_Code.unique())]).reset_index()
+                x.Secu_Code.unique().astype('object'))]).reset_index()
     new_market_week_ratio = pd.DataFrame(new_market.groupby(['PortCode', 'TradingDay']).apply(
                                                             lambda x: x.Ratio.mean())).reset_index()
     
