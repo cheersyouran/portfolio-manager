@@ -85,6 +85,7 @@ for i in range(NUM_DAY):
 
 top = top[1:]
 top.tradingday = top.tradingday.apply(lambda x: str(x)[:10])
+top.sort_values(['tradingday'], inplace=True)
 
 path = '/Users/wangchengming/Documents/5001Project/Snowball/EvaluationDemo/Task1_output.csv'
 top.to_csv(path, index=None)
