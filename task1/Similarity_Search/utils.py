@@ -75,7 +75,7 @@ def update_all_signs_bit(date_, quote_test, mapping, signs_dict, WINDOW_SIZE=10)
     secu_signs = pd.DataFrame(secu_updown.ChangePCT.apply(lambda x: func(x)))
     secu_signs.columns = ['Sign']
     for code in secu_signs.index:
-        print('Date:', date_, ' ', 'Code:', code)
+        print('Updating Database...  ', 'Date:', date_, ' ', 'Code:', code)
         indust = mapping[code]
         update_sign = float(secu_signs.loc[code])
         signs_bit = signs_dict[indust][code]

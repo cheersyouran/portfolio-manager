@@ -27,8 +27,13 @@ quote_sub = quote[quote.TradingDay.isin(date_sub_range)]
 date_test_range = quote.TradingDay.unique()[test_start_ind:]
 quote_test = quote[quote.TradingDay.isin(date_test_range)]
 test_end_ind = len(quote.TradingDay.unique())
-NUM_DAY = test_end_ind - test_start_ind
 
+if not LIMITED:
+    NUM_DAY = test_end_ind - test_start_ind
+
+print('\n################ Number of Days to test:', NUM_DAY, '################')
+
+print('\n################ Start Constructing Historical Database... ###############\n')
 
 # Save historical matrices as dicts and bitmap arrays.
 # Dictionary keys are industry names and its values are sub-dictionaries with security codes as keys.
@@ -44,8 +49,11 @@ for ind in industry.FirstIndustryName.unique():
         i += 1
         print('SecuCode:', secu, '+++++', 'Num:', i)
     time2 = time.time()
-    print('Industry:', ind, ' ---- ', 'Time Spent:', round(time2-time1, 2))
+    print('----------------- Industry:', ind, ' ---- ', 'Time Spent:', round(time2-time1, 2))
 
+print('\n################ Historical Database has been contructed. #################')
+
+print('\n################ Start testing on test set...             ###################')
 
 # Main test phase. By iteratively updating and searching, get the top secucodes for each day and assign weights to them.
 top = pd.DataFrame([0, 0, 0]).T
@@ -71,16 +79,17 @@ for i in range(NUM_DAY):
         probs = np.ones(100) / 100
         secu_prob = float(secu_distribution.reshape((1, -1)).dot(probs.reshape((-1, 1))))
         secu_probs[code] = secu_prob
-        print('Date:', date_, '----', 'SecuCode:', code, '----', 'Prob:', secu_prob)
+        print('Currently Testing...  ', 'Date:', date_, '----', 'SecuCode:', code, '----')
     top_codes = generate_weights(secu_probs, date, top=TOP)
     top = pd.concat([top, top_codes])
 
 top = top[1:]
 top.tradingday = top.tradingday.apply(lambda x: str(x)[:10])
 
+path = '/Users/wangchengming/Documents/5001Project/Snowball/EvaluationDemo/Task1_output.csv'
+top.to_csv(path, index=None)
 
-top.to_csv('/Users/wangchengming/Documents/5001Project/Snowball/EvaluationDemo/Task1_output.csv', index=None)
-
+print('\n#################### Stock Weight file is saved in', path, '####################')
 # base_weights = generate_baseline_weights_2(NUM_DAY, 10)
 # base_weights.to_csv('/Users/wangchengming/Documents/5001Project/Snowball/EvaluationDemo/task1_baseline2.csv', 
                      # index=None)

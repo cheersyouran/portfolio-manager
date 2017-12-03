@@ -155,9 +155,9 @@ def Update_IR_rank(date, df_records, df_ind_quote, df_nav, df_quote, IR_rank, sa
     new_IR_rank = new_IR_rank[~pd.isnull(new_IR_rank.IR)].sort_values(['IR'])
     
     if save_path is None:
-        return new_IR_rank
+        return new_IR_rank.set_index(['PortCode'])
     else:
         new_IR_rank.to_csv(save_path + '/IR_rank_week.csv')
         print('Saved updated IR_rank_week to', save_path)
-        return new_IR_rank
+        return new_IR_rank.set_index(['PortCode'])
     
