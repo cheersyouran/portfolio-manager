@@ -6,10 +6,8 @@ from utils import *
 from bitarray import bitarray
 from RL.task1.Similarity_Search.CONFIG import *
 
-
-quote = RL.base.load_quote_csv()
-industry = RL.base.load_industry_csv()
-quote.dropna(inplace=True)
+test_date = RL.base.DATE
+quote.TradingDay = quote.TradingDay.map(lambda x: str(x)[:10])
 
 
 mapping = industry.set_index(['SecuCode']).to_dict()['FirstIndustryName']
@@ -23,10 +21,13 @@ mapping_reverse = ind_sec.to_dict()['SecuCodes']
 code_ind = quote[~quote.SecuCode.isin(industry.SecuCode)].SecuCode.unique()
 quote = quote[~quote.SecuCode.isin(code_ind)]
 # quote_sub contains pre-saved historical matrices and quote_test contains future incoming matrices.
-date_sub = quote.TradingDay.unique()[:-NUM_DAY-2]
-quote_sub = quote[quote.TradingDay.isin(date_sub)]
-date_test = quote.TradingDay.unique()[-NUM_DAY-2:]
-quote_test = quote[quote.TradingDay.isin(date_test)]
+test_start_ind = int(np.where(quote.TradingDay.unique() == test_date)[0])
+date_sub_range = quote.TradingDay.unique()[:test_start_ind]
+quote_sub = quote[quote.TradingDay.isin(date_sub_range)]
+date_test_range = quote.TradingDay.unique()[test_start_ind:]
+quote_test = quote[quote.TradingDay.isin(date_test_range)]
+test_end_ind = len(quote.TradingDay.unique())
+NUM_DAY = test_end_ind - test_start_ind
 
 
 # Save historical matrices as dicts and bitmap arrays.

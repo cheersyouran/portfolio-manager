@@ -1,8 +1,8 @@
 #encoding:utf-8
 import pandas as pd
 
-PROJ_PATH='/Users/Youran/Projects/PortfolioManagement/'
-DATE='2017-01-01'
+PROJ_PATH='/Users/wangchengming/Documents/5001Project/Snowball/RL'
+DATE='2017-04-05'
 
 QUTOE_PATH=PROJ_PATH+"/data/quote.csv"
 RECORDS_PATH=PROJ_PATH+"/data/records.csv"

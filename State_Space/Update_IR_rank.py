@@ -41,10 +41,18 @@ def compute_std(N_after, s, mean, mean_after, new):
 
 # Demo:
 #     IR_rank = Update_IR_rank(date, df_records, df_ind_quote, df_nav, df_quote, IR_rank, save_path='./data')
-#     For a new coming day, given new records, quote, industryquote, nav and previous IR_rank data, update the IR_rank data and save it.     
+#     For a new coming day, given new records, quote, industryquote, nav and previous IR_rank data, update the IR_rank data and save it. 
+
+
+
+# date = '2017-01-06'
+# df_records = records[records.Updated<=date]
+# df_ind_quote = industry_quote[industry_quote.TradingDay<=date]
+# df_nav = nav[nav.NavDate<=date]
+# df_quote = quote[quote.TradingDay<=date]
+# Update_IR_rank(date, df_records, df_ind_quote, df_nav, df_quote, IR_rank)    
 
 def Update_IR_rank(date, df_records, df_ind_quote, df_nav, df_quote, IR_rank, save_path=None):
-
     # Decide whether this date is the end of the week. If not return the original IR rank.
     if datetime.weekday(np.datetime64(date).item()) != 4:
         return IR_rank
