@@ -8,3 +8,4 @@ task2/model/test2.py
 !/data/industry.csv
 !/data/IR_rank_week.csv
 /alpha-strategy.py
+/result/*

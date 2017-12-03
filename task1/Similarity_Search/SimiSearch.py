@@ -6,7 +6,7 @@ from utils import *
 from bitarray import bitarray
 from task1.Similarity_Search.CONFIG import *
 
-test_date = base.DATE
+test_date = base.TASK2_DATE
 quote.TradingDay = quote.TradingDay.map(lambda x: str(x)[:10])
 
 

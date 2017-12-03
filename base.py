@@ -2,8 +2,10 @@
 import pandas as pd
 import run_task2
 
-PROJ_PATH=run_task2.project_path
-DATE=run_task2.start_date
+PROJ_PATH='/Users/Youran/Projects/PortfolioManagement'
+TASK2_DATE=run_task2.start_date
+TASK1_DATE=run_task1.state_date
+
 QUTOE_PATH=PROJ_PATH+"/data/quote.csv"
 RECORDS_PATH=PROJ_PATH+"/data/records.csv"
 NAV_PATH=PROJ_PATH+"/data/nav_sample.csv"

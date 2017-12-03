@@ -32,7 +32,7 @@ def run_model(kind, features, irrank, market):
 
     rewards = 0
     obs = env.get_obs()
-    fd = open(str(kind)+'.csv', 'a')
+    fd = open('result/'+str(kind)+'.csv', 'a')
     while True:
         a = model.choose_action(str(obs))
         obs_, r, done = env.step(a)
