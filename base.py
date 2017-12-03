@@ -1,12 +1,12 @@
 #encoding:utf-8
 import pandas as pd
+import run_task2
 
-PROJ_PATH='/Users/wangchengming/Documents/5001Project/Snowball/RL'
-DATE='2017-04-05'
-
+PROJ_PATH=run_task2.project_path
+DATE=run_task2.start_date
 QUTOE_PATH=PROJ_PATH+"/data/quote.csv"
 RECORDS_PATH=PROJ_PATH+"/data/records.csv"
-NAV_PATH=PROJ_PATH+"/data/nav.csv"
+NAV_PATH=PROJ_PATH+"/data/nav_sample.csv"
 INDUTRY_PATH=PROJ_PATH+'/data/industry.csv'
 INDUSTRYQUOTE_PATH=PROJ_PATH+'/data/industry_quote.xlsx'
 IR_WEEK_PATH=PROJ_PATH+'/State_Space/IR_rank_week.csv'

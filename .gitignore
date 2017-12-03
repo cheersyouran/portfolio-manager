@@ -4,4 +4,7 @@
 /sorted_10.csv
 task2/model/test2.py
 /data/*
+!/data/tradingday.csv
+!/data/industry.csv
+!/data/IR_rank_week.csv
 /alpha-strategy.py
