@@ -70,7 +70,7 @@ def run_simi_search():
         ut.update_all_signs_bit(date_, quote_test, mapping, signs_dict, CONF.WINDOW_SIZE)
         secu_codes = quote_test[quote_test.TradingDay == date].SecuCode.unique()
         secu_probs = {}
-        for code in secu_codes[:NUM_CODES]:
+        for code in secu_codes[:CONF.NUM_CODES]:
             indust = mapping[code]
             signs_bit = signs_dict[indust][code]
             vec = np.array(list(signs_bit[-CONF.WINDOW_SIZE:].to01())).astype('int')
@@ -78,7 +78,7 @@ def run_simi_search():
             secu_distribution = []
             for secu in ut.find_similar_secu(code, mapping, mapping_reverse):
                 signs_bit = signs_dict[indust][secu]
-                signs_mat = np.array(list(signs_bit.to01())).astype('int').reshape((-1, WINDOW_SIZE))
+                signs_mat = np.array(list(signs_bit.to01())).astype('int').reshape((-1, CONF.WINDOW_SIZE))
                 secu_distribution.extend(ut.get_distribution(signs_mat, vec, front=0.2))
 
             secu_distribution = np.array(secu_distribution[:100])
@@ -93,7 +93,7 @@ def run_simi_search():
     top.tradingday = top.tradingday.apply(lambda x: str(x)[:10])
     top.sort_values(['tradingday'], inplace=True)
 
-    path = base.PROJ_PATH + '/Task1_output.csv'
+    path = 'result/task1_result.csv'
     top.to_csv(path, index=None)
 
     print('\n#################### Stock Weight file is saved in', path, '####################')

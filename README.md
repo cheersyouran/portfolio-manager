@@ -1,10 +1,9 @@
 I. Package Introduction:
 
     |-- State_Space: this package is used to generate daily state space and portfolio IR rank.
-    |   |-- feat_selection.py: 
-    |   |-- Generate_IR_rank_week.py:
-    |   |-- IR_month.py:
-    |   |-- Update_IR_rank.py:
+    |   |-- feat_selection.py: Functions mainly used to select features.
+    |   |-- Generate_IR_rank_week.py: Generate information ratio rank based on weekly data.
+    |   |-- Update_IR_rank.py: Functions used to update IR rank every week.
     |
     |-- data: this folder contains required data.
     |   |-- industry.csv : A dataset consists of industry information of all stocks.
@@ -37,8 +36,16 @@ II. How to run the model?
         PROJ_PATH='........./RL'
 
     Task1:
-        6. [OPTIONAL] You can change the number of test days in /task1/Similarity_Search/CONFIG.py by setting 'LIMITED' = True and 'NUM_DAY'. Also, number of secucodes to choose from and output, the size of window can all be changed in CONFIG.py.
+        1. Make sure to use Python 3.0+.
+        2. Make sure to install all required third-part packages: [numpy, bitarray, pandas, time, etc].
+        3. Replace data files in ./data folder, the file name MUST BE same as above introduction.
+        4. Update 'project_path' and start_date in ./run_task1.py file.
+              project_path='......../RL'
+              start_date='2017-01-06' : that means our model will use data before 2017-01-05 to train a model, and make prediction on 2017-01-06.
+        5. [OPTIONAL] You can change number of testing days, window size, number of stocks you choose from and output in task1/Similarity_Search/CONFIG.py file.
+        6. python ./run_task1.py
 
+        Then you can check the result file at "result/task1_result.csv"
 
     Task2:
         1. Make sure to use Python 3.0+.
