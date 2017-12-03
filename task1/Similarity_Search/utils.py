@@ -4,10 +4,10 @@ import numpy as np
 import datetime
 import time
 from bitarray import bitarray
-import RL.base
+import base
 
-quote = RL.base.load_quote_csv()
-industry = RL.base.load_industry_csv()
+quote = base.load_quote_csv()
+industry = base.load_industry_csv()
 quote.dropna(inplace=True)
 
 
