@@ -5,17 +5,19 @@ sys.path.append('/Users/Youran/Projects/PortfolioManagement')
 from task2.QLearningModel_beta.env import Env
 from task2.QLearningModel_beta.QLearningModel import QLearningModel
 from task2.QLearningModel_beta.market import Market
+from State_Space.Update_IR_rank import Update_IR_rank
+import base
 
 train_window = 10
 test_window = 1
 
 market = Market()
 
-def run_a_kind_of_model(kind, features):
-
+def run_a_kind_of_model(kind, features, irrank):
+    ir = irrank
     print('Kind:', kind)
     while True:
-        env = Env(train_window, test_window, market, kind, features)
+        env = Env(train_window, test_window, market, kind, features, ir)
         RL = QLearningModel(actions=list(range(env.nb_portcodes + 1)), random_step=300)
         count = 0
         episode = 1
@@ -33,6 +35,8 @@ def run_a_kind_of_model(kind, features):
                 if done:
                     break
             ratio = rewards / (train_window * 10)
+            ir = Update_IR_rank(str(market.current_date), env.records, env.industry_quote, env.nav, env.quote, ir)
+
             print('Episode: ', episode, 'Rewards: ', rewards, 'Accuracy: ', ratio)
             if (ratio > 0.9) | (episode >= 10):
                 break
@@ -55,12 +59,11 @@ def run_a_kind_of_model(kind, features):
             if done:
                 break
         fd.close()
-
-        ratio = rewards / (test_window * 10)
-        print('Rewards: ', rewards, 'Accuracy: ', ratio)
         market.pass_a_day()
 
-t1 = threading.Thread(target=run_a_kind_of_model, args=('计算机', [[1, 2]]), name='T1')
-t1.start()
-# t2 = threading.Thread(target=run_a_kind_of_model, args=('银行', [[1, 2]]), name='T2')
+irrank = base.load_irweek_csv()
+run_a_kind_of_model('计算机', [[1, 2]], irrank)
+# t1 = threading.Thread(target=run_a_kind_of_model, args=('计算机', [[1, 2]], irrank), name='T1')
+# t1.start()
+# t2 = threading.Thread(target=run_a_kind_of_model, args=('银行', [[1, 2]], irrank), name='T2')
 # t2.start()

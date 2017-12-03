@@ -1,16 +1,13 @@
 import numpy as np
-import base
-from State_Space.Generate_IR_rank_week import generate_IR_rank
 
 from State_Space import feat_selection
 
 class Env():
-    def __init__(self, train_window, test_window, market, kind, features):
+    def __init__(self, train_window, test_window, market, kind, features, irrank=None):
         self.nb_portcodes = 3
         self.count = 0
         self.industry_quote, self.records, self.nav, self.quote = market.get_past_market()
-        self.IR_rank = generate_IR_rank(self.records, self.nav, self.industry_quote, self.quote, save_path=None)
-        # self.IR_rank = base.load_irweek_csv()
+        self.IR_rank = irrank
         self.portcodes = feat_selection.search_port(kind, self.records, self.nav, self.IR_rank, day=train_window+test_window, output=3)
         self.current_state = None
         self.next_state = None

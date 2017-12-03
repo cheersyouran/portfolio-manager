@@ -2,7 +2,7 @@ import base
 from datetime import datetime,timedelta
 import pandas as pd
 
-time = pd.to_datetime(base.DATE)
+time = pd.to_datetime(base.DATE).date()
 
 class Market():
     def __init__(self):
