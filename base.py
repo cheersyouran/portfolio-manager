@@ -1,10 +1,11 @@
 #encoding:utf-8
 import pandas as pd
 import run_task2
+import run_task1
 
-PROJ_PATH='/Users/Youran/Projects/PortfolioManagement'
+PROJ_PATH='/Users/wangchengming/Documents/5001Project/Snowball/RL'
 TASK2_DATE=run_task2.start_date
-TASK1_DATE=run_task1.state_date
+TASK1_DATE=run_task1.start_date
 
 QUTOE_PATH=PROJ_PATH+"/data/quote.csv"
 RECORDS_PATH=PROJ_PATH+"/data/records.csv"

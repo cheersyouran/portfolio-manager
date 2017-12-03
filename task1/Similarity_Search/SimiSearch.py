@@ -2,11 +2,11 @@
 import pandas as pd
 import numpy as np
 import base
-from utils import *
+from task1.Similarity_Search.utils import *
 from bitarray import bitarray
 from task1.Similarity_Search.CONFIG import *
 
-test_date = base.TASK2_DATE
+test_date = base.TASK1_DATE
 quote.TradingDay = quote.TradingDay.map(lambda x: str(x)[:10])
 
 
