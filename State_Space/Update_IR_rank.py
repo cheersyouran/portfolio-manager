@@ -43,14 +43,7 @@ def compute_std(N_after, s, mean, mean_after, new):
 #     IR_rank = Update_IR_rank(date, df_records, df_ind_quote, df_nav, df_quote, IR_rank, save_path='./data')
 #     For a new coming day, given new records, quote, industryquote, nav and previous IR_rank data, update the IR_rank data and save it. 
 
-
-
-# date = '2017-01-06'
-# df_records = records[records.Updated<=date]
-# df_ind_quote = industry_quote[industry_quote.TradingDay<=date]
-# df_nav = nav[nav.NavDate<=date]
-# df_quote = quote[quote.TradingDay<=date]
-# Update_IR_rank(date, df_records, df_ind_quote, df_nav, df_quote, IR_rank)    
+   
 
 def Update_IR_rank(date, df_records, df_ind_quote, df_nav, df_quote, IR_rank, save_path=None):
     # Decide whether this date is the end of the week. If not return the original IR rank.
@@ -138,7 +131,7 @@ def Update_IR_rank(date, df_records, df_ind_quote, df_nav, df_quote, IR_rank, sa
     if len(new_portcodes) > 0:
         new_row = pd.DataFrame(np.zeros((len(new_portcodes), 5)))
         new_row.iloc[:, 0] = new_portcodes
-        new_row.columns = ir.reset_index().columns.tolist()
+        new_row.columns = IR_rank.reset_index().columns.tolist()
         new_IR_rank.append(new_row)
 
 
