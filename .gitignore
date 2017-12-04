@@ -1,7 +1,7 @@
 /.idea/
 **/__pycache__
-/stock_avg.csv
-/sorted_10.csv
+/*.csv
+**/*.docx
 task2/model/test2.py
 /data/*
 !/data/tradingday.csv
@@ -9,3 +9,4 @@ task2/model/test2.py
 !/data/IR_rank_week.csv
 /alpha-strategy.py
 /result/*
+/utils.py

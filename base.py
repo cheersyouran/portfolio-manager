@@ -3,7 +3,7 @@ import pandas as pd
 import run_task2
 import run_task1
 
-PROJ_PATH='/Users/wangchengming/Documents/5001Project/Snowball/RL'
+PROJ_PATH='/Users/Youran/Projects/PortfolioManagement'
 TASK2_DATE=run_task2.start_date
 TASK1_DATE=run_task1.start_date
 

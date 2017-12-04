@@ -9,7 +9,7 @@ warnings.filterwarnings('ignore')
 
 project_path = '/Users/Youran/Projects/PortfolioManagement'
 start_date = '2017-01-06'
-train_window = 100
+train_window = 10
 test_window = 1
 
 sys.path.append(project_path)
@@ -31,7 +31,7 @@ def save_file(ind):
     df = pd.read_csv(tmp_path, header=None)
     df.columns = ['tradingday', 'portcode', 'portweight']
     unique = df.groupby(['tradingday']).apply(func=method)
-    unique.to_csv(result_path, encoding="utf_8_sig", mode='a+',index=False)
+    unique.to_csv(result_path, encoding="utf_8_sig", mode='a+', index=False, head=False)
 
     os.remove(tmp_path)
 

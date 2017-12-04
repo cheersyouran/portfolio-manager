@@ -63,5 +63,5 @@ II. How to run the model?
 III. BUG?
 
     Of course...
-    If some strange error appear, calm down please, re-run it or contact me thx! email: cheeryouran@yeah.net
+    If some strange error appear, calm down please, re-run it or contact me thx! email: cheersyouran@yeah.net
     Have a good day!
