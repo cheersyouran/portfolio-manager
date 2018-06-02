@@ -9,3 +9,4 @@ task2/model/test2.py
 !/data/IR_rank_week.csv
 /alpha-strategy.py
 /result/*
+!/result/report.docx
